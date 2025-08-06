@@ -1,13 +1,47 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:pendana/details.dart';
-
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 void main() {
+  if (Platform.isAndroid || Platform.isIOS) {
+    print("Running on mobile");
+  } else {
+    print("Not running on mobile. Splash won’t show.");
+  }
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    initialization();
+  }
+
+  void initialization() async {
+    print('Checking if splash should be shown...');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstLaunch = prefs.getBool('seenSplash') ?? false;
+
+    if (!isFirstLaunch) {
+      print('First time opening app...');
+      await prefs.setBool('seenSplash', true);
+      await Future.delayed(Duration(seconds: 3));
+    } else {
+      print('Not first launch. Skipping splash delay.');
+    }
+
+    FlutterNativeSplash.remove(); // Remove native splash screen
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,52 +49,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      home: SplashScreen(),
-    );
-  }
-}
-
-
-class SplashScreen extends StatefulWidget {
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Timer(Duration(seconds: 3), () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Details())); // Or onboarding
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF1E1E2F), // Dark blue-purple background
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/logo.png', height: 120),
-            SizedBox(height: 20),
-            Text(
-              "Pendana",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "From a swipe to a soulmate 🇹🇿",
-              style: TextStyle(
-                color: Colors.grey[300],
-                fontSize: 16,
-              ),
-            ),
-          ],
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Pendana - Home'),
+        ),
+        body: Center(
+          child: Text(
+            'Welcome to Pendana ❤️',
+            style: TextStyle(fontSize: 24),
+          ),
         ),
       ),
     );
