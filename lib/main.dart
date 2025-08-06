@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:pendana/details.dart';
 
 
 void main() {
@@ -30,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, '/login'); // Or onboarding
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Details())); // Or onboarding
     });
   }
 
@@ -53,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(
-              "Love is just a swipe away 🇹🇿",
+              "From a swipe to a soulmate 🇹🇿",
               style: TextStyle(
                 color: Colors.grey[300],
                 fontSize: 16,
