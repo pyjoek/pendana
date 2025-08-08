@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
                   fontWeight: FontWeight.w600, fontSize: 64
                 ),),
                 SizedBox(height: 30,),
-                Text("Sign up to rind", style: TextStyle(
+                Text("Sign up to f ind", style: TextStyle(
                   fontWeight: FontWeight.w300, fontSize: 34
                 ),),
                 Text("Your match!", style: TextStyle(
