@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
@@ -9,8 +8,8 @@ void main() {
   } else {
     print("Not running on mobile. Splash won’t show.");
   }
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(MyApp());
 }
 
@@ -39,7 +38,7 @@ class _MyAppState extends State<MyApp> {
       print('Not first launch. Skipping splash delay.');
     }
 
-    FlutterNativeSplash.remove(); // Remove native splash screen
+    // FlutterNativeSplash.remove(); // Remove native splash screen
   }
 
   final Color background = Color(0xFFFFF9F6);
@@ -55,64 +54,67 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor:background,
-        body: Padding(
-          padding: const EdgeInsets.all(28.0),
-          child: Center(
-            child: Column(
-              children: [
-                SizedBox(height: 120,),
-                Text("Create", style: TextStyle(
-                  fontWeight: FontWeight.w600, fontSize: 64
-                ),),
-                Text("Account", style: TextStyle(
-                  fontWeight: FontWeight.w600, fontSize: 64
-                ),),
-                SizedBox(height: 30,),
-                Text("Sign up to f ind", style: TextStyle(
-                  fontWeight: FontWeight.w300, fontSize: 34
-                ),),
-                Text("Your match!", style: TextStyle(
-                  fontWeight: FontWeight.w300, fontSize: 34
-                ),),
-                SizedBox(height: 50,),
-                SizedBox(
-                    width: width * 0.7,
-                  child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Name',
-                    filled: true,
-                    fillColor: background,
-                    contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    )
-                  ),
-                ),
-                ),
-                SizedBox(height: 20,),
-                InkWell(
-                  onTap: () => {print('signing up')},
-                  child: Container(
-                    child: Center(child: Text("sign up", style: TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white
-                    ))),
-                    width: width * 0.7,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Color(0xFFE28A89)
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(28.0),
+            child: Center(
+              child: Column(
+                children: [
+                  SizedBox(height: height * 0.1,),
+                  Text("Create", style: TextStyle(
+                    fontWeight: FontWeight.w600, fontSize: 64
+                  ),),
+                  Text("Account", style: TextStyle(
+                    fontWeight: FontWeight.w600, fontSize: 64
+                  ),),
+                  SizedBox(height: height * 0.04,),
+                  Text("Sign up to find", style: TextStyle(
+                    fontWeight: FontWeight.w300, fontSize: 34
+                  ),),
+                  Text("Your match!", style: TextStyle(
+                    fontWeight: FontWeight.w300, fontSize: 34
+                  ),),
+                  SizedBox(height: height * 0.05,),
+                  SizedBox(
+                      width: width * 0.7,
+                    child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Name',
+                      filled: true,
+                      fillColor: background,
+                      contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      )
                     ),
                   ),
-                ),
-              SizedBox(height: height * 0.3,),
-              InkWell(
-                onTap: () => {print('logging....')},
-                child: Text("Log in", style: TextStyle(
-                    fontWeight: FontWeight.w300, fontSize: 30, color: Color(0xFFE28A89)
-                  )
-                ),
-              )
-              ],
+                  ),
+                  SizedBox(height: 20,),
+                  InkWell(
+                    onTap: () => {print('signing up')},
+                    child: Container(
+                      child: Center(child: Text("sign up", style: TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white
+                      ))),
+                      width: width * 0.7,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Color(0xFFE28A89)
+                      ),
+                    ),
+                  ),
+                SizedBox(height: height * 0.2,),
+                InkWell(
+                  onTap: () => {print('logging....')},
+                  child: Text("Log in", style: TextStyle(
+                      fontWeight: FontWeight.w300, fontSize: 30, color: Color(0xFFE28A89)
+                    )
+                  ),
+                )
+                ],
+              ),
             ),
           ),
         ),
