@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initialization();
+    // initialization();
   }
 
   void initialization() async {
@@ -42,6 +42,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   final Color background = Color(0xFFFFF9F6);
+  final name = TextEditingController();
   double width = 0;
   double height = 0;
 
@@ -79,6 +80,7 @@ class _MyAppState extends State<MyApp> {
                   SizedBox(
                       width: width * 0.7,
                     child: TextFormField(
+                      controller: name,
                     decoration: InputDecoration(
                       hintText: 'Name',
                       filled: true,
@@ -92,7 +94,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   SizedBox(height: 20,),
                   InkWell(
-                    onTap: () => {print('signing up')},
+                    onTap: () => {print('hello ${name.text}')},
                     child: Container(
                       child: Center(child: Text("sign up", style: TextStyle(
                         fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white
