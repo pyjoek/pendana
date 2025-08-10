@@ -21,6 +21,20 @@ class _GeneralState extends State<General> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController likesController = TextEditingController();
 
+   List<String> availableLikes = [
+    "Music",
+    "Sports",
+    "Travel",
+    "Movies",
+    "Reading",
+    "Cooking",
+    "Gaming",
+    "Fitness"
+  ];
+
+    // Track which likes are selected
+  Set<String> selectedLikes = {};
+
   String gender = '';
 
   void nextPage() {
@@ -60,9 +74,11 @@ class _GeneralState extends State<General> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "What's your age?",
-                  style: Theme.of(context).textTheme.titleLarge,
+                Center(
+                  child: Text(
+                    "What's your age?",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
@@ -75,7 +91,7 @@ class _GeneralState extends State<General> {
                 ),
                 const Spacer(),
                 Align(
-                  alignment: Alignment.bottomRight,
+                  alignment: Alignment.center,
                   child: ElevatedButton(
                     onPressed: nextPage,
                     child: const Text("Next"),
@@ -131,7 +147,7 @@ class _GeneralState extends State<General> {
           ),
 
           // Step 3: Likes
-          Padding(
+           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,14 +157,42 @@ class _GeneralState extends State<General> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 20),
+
+                // Optional: also keep the TextField for custom likes
                 TextField(
                   controller: likesController,
                   decoration: const InputDecoration(
-                    labelText: "Enter your likes",
+                    labelText: "Other likes (optional)",
                     border: OutlineInputBorder(),
                   ),
                 ),
+
+                const SizedBox(height: 20),
+                // Wrap widget to show selectable chips/buttons for likes
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: availableLikes.map((like) {
+                    final isSelected = selectedLikes.contains(like);
+                    return ChoiceChip(
+                      label: Text(like),
+                      selected: isSelected,
+                      selectedColor: Colors.pink.shade300,
+                      onSelected: (selected) {
+                        setState(() {
+                          if (selected) {
+                            selectedLikes.add(like);
+                          } else {
+                            selectedLikes.remove(like);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+
                 const Spacer(),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -163,7 +207,8 @@ class _GeneralState extends State<General> {
                         print("Password: ${widget.password}");
                         print("Age: ${ageController.text}");
                         print("Gender: $gender");
-                        print("Likes: ${likesController.text}");
+                        print("Selected Likes: $selectedLikes");
+                        print("Other Likes: ${likesController.text}");
                       },
                       child: const Text("Finish"),
                     ),
@@ -172,6 +217,49 @@ class _GeneralState extends State<General> {
               ],
             ),
           ),
+
+
+          // Padding(
+          //   padding: const EdgeInsets.all(20),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Text(
+          //         "What do you like?",
+          //         style: Theme.of(context).textTheme.titleLarge,
+          //       ),
+          //       const SizedBox(height: 20),
+          //       TextField(
+          //         controller: likesController,
+          //         decoration: const InputDecoration(
+          //           labelText: "Enter your likes",
+          //           border: OutlineInputBorder(),
+          //         ),
+          //       ),
+          //       const Spacer(),
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           ElevatedButton(
+          //             onPressed: prevPage,
+          //             child: const Text("Previous"),
+          //           ),
+          //           ElevatedButton(
+          //             onPressed: () {
+          //               print("Name: ${widget.name}");
+          //               print("Phone: ${widget.phone}");
+          //               print("Password: ${widget.password}");
+          //               print("Age: ${ageController.text}");
+          //               print("Gender: $gender");
+          //               print("Likes: ${likesController.text}");
+          //             },
+          //             child: const Text("Finish"),
+          //           ),
+          //         ],
+          //       )
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
