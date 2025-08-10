@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pendana/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
@@ -93,19 +94,25 @@ class _MyAppState extends State<MyApp> {
                   ),
                   ),
                   SizedBox(height: 20,),
-                  InkWell(
-                    onTap: () => {print('hello ${name.text}')},
-                    child: Container(
-                      child: Center(child: Text("sign up", style: TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white
-                      ))),
-                      width: width * 0.7,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Color(0xFFE28A89)
-                      ),
-                    ),
+                  Builder(
+                    builder: (context) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp(name: name.text)));
+                        },
+                        child: Container(
+                          child: Center(child: Text("sign up", style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white
+                          ))),
+                          width: width * 0.7,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Color(0xFFE28A89)
+                          ),
+                        ),
+                      );
+                    }
                   ),
                 SizedBox(height: height * 0.2,),
                 InkWell(
