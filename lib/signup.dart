@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pendana/general.dart';
 
 class SignUp extends StatefulWidget {
   SignUp({super.key, required this.name});
@@ -109,6 +110,7 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(height: height * 0.07,),
                   InkWell(
                   onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => General(name: name, phone: phone.text, password: password.text)));
                         print("Name: $name \nPhone: ${phone.text} \nPassword: ${password.text}");
                       },
                   child: Text("Sign Up", style: TextStyle(
