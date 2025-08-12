@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pendana/login.dart';
 import 'package:pendana/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
-void main() {
+void main() async {
+
   if (Platform.isAndroid || Platform.isIOS) {
     print("Running on mobile");
   } else {
@@ -115,13 +117,22 @@ class _MyAppState extends State<MyApp> {
                     }
                   ),
                 SizedBox(height: height * 0.2,),
-                InkWell(
-                  onTap: () => {print('logging....')},
-                  child: Text("Log in", style: TextStyle(
-                      fontWeight: FontWeight.w300, fontSize: 30, color: Color(0xFFE28A89)
-                    )
+                Builder(
+                    builder: (context) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => LoginPage()));
+                          print('logging....');
+                        },
+                        child: Text(
+                          "Log in",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 30, color: Color(0xFFE28A89),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                )
                 ],
               ),
             ),
