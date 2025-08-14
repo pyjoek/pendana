@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:pendana/general.dart';
 
 class SignUp extends StatefulWidget {
-  SignUp({super.key, required this.name});
+  SignUp({super.key});
 
-  final String name;
 
   @override
-  State<SignUp> createState() => _SignUpState(name: name);
+  State<SignUp> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
-  _SignUpState({required this.name});
 
   double width = 0;
 
   double height = 0;
-  final String name;
+  final String name = "joel";
 
   final Color background = Color(0xFFFFF9F6);
 
@@ -51,7 +49,7 @@ class _SignUpState extends State<SignUp> {
                       fontWeight: FontWeight.w300, fontSize: 44
                     ),
                   ),
-                  Text(widget.name.toUpperCase(), style: TextStyle(
+                  Text(name.toUpperCase(), style: TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 34
                     ),
                   ),

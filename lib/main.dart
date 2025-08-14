@@ -22,11 +22,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    // initialization();
-  }
 
   void initialization() async {
     print('Checking if splash should be shown...');
@@ -45,7 +40,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   final Color background = Color(0xFFFFF9F6);
-  final name = TextEditingController();
   double width = 0;
   double height = 0;
 
@@ -59,82 +53,60 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         backgroundColor:background,
         resizeToAvoidBottomInset: true,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(28.0),
-            child: Center(
-              child: Column(
-                children: [
-                  SizedBox(height: height * 0.1,),
-                  Text("Create", style: TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 64
-                  ),),
-                  Text("Account", style: TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 64
-                  ),),
-                  SizedBox(height: height * 0.04,),
-                  Text("Sign up to find", style: TextStyle(
-                    fontWeight: FontWeight.w300, fontSize: 34
-                  ),),
-                  Text("Your match!", style: TextStyle(
-                    fontWeight: FontWeight.w300, fontSize: 34
-                  ),),
-                  SizedBox(height: height * 0.05,),
-                  SizedBox(
-                      width: width * 0.7,
-                    child: TextFormField(
-                      controller: name,
-                    decoration: InputDecoration(
-                      hintText: 'Name',
-                      filled: true,
-                      fillColor: background,
-                      contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      )
-                    ),
-                  ),
-                  ),
-                  SizedBox(height: 20,),
-                  Builder(
-                    builder: (context) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp(name: name.text)));
-                        },
-                        child: Container(
-                          child: Center(child: Text("sign up", style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white
-                          ))),
-                          width: width * 0.7,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Color(0xFFE28A89)
-                          ),
-                        ),
-                      );
-                    }
-                  ),
+        body: Padding(
+          padding: const EdgeInsets.all(28.0),
+          child: Center(
+            child: Column(
+              children: [
                 SizedBox(height: height * 0.2,),
-                Builder(
-                    builder: (context) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => LoginPage()));
-                          print('logging....');
-                        },
-                        child: Text(
-                          "Log in",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300, fontSize: 30, color: Color(0xFFE28A89),
-                          ),
-                        ),
-                      );
-                    },
+                Text("PENDANA", style: TextStyle(
+                  fontWeight: FontWeight.w600, fontSize: 54
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: height * 0.08,),
+                Container(
+                  height: height * 0.15,
+                  child: Image.asset('assets/logo.png'),
+                ),
+                SizedBox(height: height * 0.1,),
+                Builder(
+                  builder: (context) {
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+                      },
+                      child: Container(
+                        child: Center(child: Text("SIGN UP", style: TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 20, color: Colors.white
+                        ))),
+                        width: width * 0.9,
+                        height: height * 0.06,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color(0xFFE28A89)
+                        ),
+                      ),
+                    );
+                  }
+                ),
+              SizedBox(height: height * 0.04,),
+              Builder(
+                  builder: (context) {
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => Login()));
+                        print('logging....');
+                      },
+                      child: Text(
+                        "ALREADY HAVE AN ACCOUNT?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 14, color: Colors.black,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),

@@ -1,102 +1,88 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginPage extends StatelessWidget {
+class Login extends StatelessWidget {
+  const Login({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: LoginPage(),
+    );
+    
+  }
+}
+
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
-  Future<void> _signInWithGoogle(BuildContext context) async {
-    try {
-      final GoogleSignIn _googleSignIn = GoogleSignIn(
-        scopes: ['email', 'profile'],
-      );
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
 
-      final GoogleSignInAccount? account = await _googleSignIn.signIn();
-      if (account == null) return; // User cancelled
-
-      // Get basic profile info
-      print('Name: ${account.displayName}');
-      print('Email: ${account.email}');
-      print('Photo: ${account.photoUrl}');
-
-      // Send account info to your backend to create/log in the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Signed in as ${account.displayName}')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-    }
-  }
-
-  void _startPhoneAuth(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => PhoneAuthPage()));
-  }
+class _LoginPageState extends State<LoginPage> {
+  double width = 0;
+  double height = 0;
+  Color bg = Color(0xFFFFF9F6);
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: Center(
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          ElevatedButton.icon(
-            icon: Icon(Icons.login),
-            label: Text('Sign in with Google'),
-            onPressed: () => _signInWithGoogle(context),
+      backgroundColor: bg,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Center(
+              child: Column(
+                children: [
+                  SizedBox(height: height * 0.15,),
+                  Text("PENDANA", style: TextStyle(
+                  fontWeight: FontWeight.w600, fontSize: 44
+                  ),
+                ),
+                  Container(
+                    width: width * 0.8,
+                    height: height * 0.6,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [BoxShadow(
+                        color: Colors.black,
+                        offset: Offset(3, 8),
+                        blurRadius: 10
+                      )]
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: height * 0.03,),
+                        Text("Log In", style: TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 28, color: Colors.pink
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(30),
+                          child: Column(
+                            children: [
+                              TextField(
+                                decoration: InputDecoration(
+                                  hint: Text("Email"),
+                                  
+                                ),
+                              )
+                            ],
+                          ),
+                          )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
-          const SizedBox(height: 12),
-          ElevatedButton.icon(
-            icon: Icon(Icons.phone),
-            label: Text('Sign in with Phone'),
-            onPressed: () => _startPhoneAuth(context),
-          ),
-        ]),
-      ),
-    );
-  }
-}
-
-class PhoneAuthPage extends StatefulWidget {
-  @override
-  State<PhoneAuthPage> createState() => _PhoneAuthPageState();
-}
-
-class _PhoneAuthPageState extends State<PhoneAuthPage> {
-  final _phoneController = TextEditingController();
-  final _codeController = TextEditingController();
-  String? _serverCode; // Store verification code from your backend
-
-  void _sendCode() async {
-    // Here you’d call your backend API to send an SMS
-    // For demo purposes:
-    setState(() => _serverCode = "123456");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Code sent to ${_phoneController.text}')),
-    );
-  }
-
-  void _verifyCode() {
-    if (_codeController.text.trim() == _serverCode) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Phone verified successfully!')),
+        ),
       );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid code!')),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(children: [
-          TextField(controller: _phoneController, decoration: InputDecoration(labelText: 'Phone (+255...)')),
-          ElevatedButton(onPressed: _sendCode, child: Text('Send code')),
-          TextField(controller: _codeController, decoration: InputDecoration(labelText: 'Enter code')),
-          ElevatedButton(onPressed: _verifyCode, child: Text('Verify')),
-        ]),
-      ),
-    );
   }
 }
