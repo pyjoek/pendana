@@ -109,6 +109,8 @@ class _LoginPageState extends State<LoginPage> {
       final body = jsonDecode(response.body);
       final accessToken = body['access_token'];
       final user = body['user'];
+      int userId = body['id'];
+      
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('access_token', accessToken);
@@ -119,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const General(), // <-- go to General
+          builder: (_) => General(userId: userId), // <-- go to General
         ),
       );
 

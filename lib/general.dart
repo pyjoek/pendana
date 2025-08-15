@@ -1,12 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:pendana/home.dart';
 
 class General extends StatefulWidget {
+  final int userId; 
 
-  const General({
-    super.key,
-  });
+  const General({super.key, required this.userId});
 
   @override
   State<General> createState() => _GeneralState();
@@ -31,8 +32,8 @@ class _GeneralState extends State<General> {
   DateTime? selectedDate;
   String gender = '';
   String purpose = '';
+  bool _loading = false;
 
-  /// Validate age and go to next page
   void validateAndNext() {
     if (selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -75,6 +76,58 @@ class _GeneralState extends State<General> {
     );
   }
 
+  Future<void> submitData() async {
+    if (gender.isEmpty || purpose.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select gender and purpose")),
+      );
+      return;
+    }
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      // Combine selected likes + custom input
+      List<String> interests = selectedLikes.toList();
+      if (likesController.text.isNotEmpty) {
+        interests.add(likesController.text);
+      }
+
+      for (String interest in interests) {
+        final response = await http.post(
+          Uri.parse("http://127.0.0.1:5000/user/interests"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({
+            "user_id": widget.userId,
+            "interest": interest,
+          }),
+        );
+
+        if (response.statusCode != 201) {
+          final data = jsonDecode(response.body);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Error saving interest: ${data['error']}")),
+          );
+        }
+      }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Home()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
@@ -85,12 +138,13 @@ class _GeneralState extends State<General> {
       appBar: AppBar(
         title: const Text("General Information"),
         centerTitle: true,
+        backgroundColor: Colors.pink,
       ),
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          // Step 1: Date of Birth
+          // Step 1: DOB
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -98,7 +152,10 @@ class _GeneralState extends State<General> {
                 const SizedBox(height: 20),
                 Text(
                   "Select your date of birth",
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: Colors.pink),
                 ),
                 const SizedBox(height: 20),
                 Expanded(
@@ -116,6 +173,12 @@ class _GeneralState extends State<General> {
                 ),
                 const Spacer(),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30))),
                   onPressed: validateAndNext,
                   child: const Text("Next"),
                 ),
@@ -131,7 +194,10 @@ class _GeneralState extends State<General> {
               children: [
                 Text(
                   "Select your gender:",
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: Colors.pink),
                 ),
                 const SizedBox(height: 20),
                 RadioListTile(
@@ -155,20 +221,22 @@ class _GeneralState extends State<General> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: prevPage,
-                      child: const Text("Previous"),
-                    ),
+                        onPressed: prevPage,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey.shade300),
+                        child: const Text("Previous")),
                     ElevatedButton(
-                      onPressed: nextPage,
-                      child: const Text("Next"),
-                    ),
+                        onPressed: nextPage,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.pink),
+                        child: const Text("Next")),
                   ],
                 )
               ],
             ),
           ),
 
-          // Step 4: Purpose
+          // Step 3: Purpose
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -176,7 +244,10 @@ class _GeneralState extends State<General> {
               children: [
                 Text(
                   "Purpose of Joining",
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: Colors.pink),
                 ),
                 const SizedBox(height: 20),
                 RadioListTile(
@@ -208,13 +279,15 @@ class _GeneralState extends State<General> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: prevPage,
-                      child: const Text("Previous"),
-                    ),
+                        onPressed: prevPage,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey.shade300),
+                        child: const Text("Previous")),
                     ElevatedButton(
-                      onPressed: nextPage,
-                      child: const Text("Next"),
-                    ),
+                        onPressed: nextPage,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.pink),
+                        child: const Text("Next")),
                   ],
                 )
               ],
@@ -229,7 +302,10 @@ class _GeneralState extends State<General> {
               children: [
                 Text(
                   "What do you like?",
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: Colors.pink),
                 ),
                 const SizedBox(height: 20),
                 TextField(
@@ -266,21 +342,19 @@ class _GeneralState extends State<General> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: prevPage,
-                      child: const Text("Previous"),
-                    ),
+                        onPressed: prevPage,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey.shade300),
+                        child: const Text("Previous")),
                     ElevatedButton(
-                      onPressed: () {
-                        int age = DateTime.now().year - selectedDate!.year;
-                        if (DateTime.now().month < selectedDate!.month ||
-                            (DateTime.now().month == selectedDate!.month &&
-                                DateTime.now().day < selectedDate!.day)) {
-                          age--;
-                        }
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-                      },
-                      child: const Text("Finish"),
-                    ),
+                        onPressed: _loading ? null : submitData,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.pink),
+                        child: _loading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text("Finish")),
                   ],
                 )
               ],

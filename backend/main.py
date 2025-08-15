@@ -46,6 +46,25 @@ with app.app_context():
         ))
         db.session.commit()
 
+class UserInterest(db.Model):
+    __tablename__ = "user_interests"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    interest = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    # Relationship back to user
+    user = db.relationship("User", backref=db.backref("interests", lazy=True))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "interest": self.interest,
+            "created_at": self.created_at.isoformat()
+        }
+
 # --- Routes ---
 @app.get("/health")
 def health():
@@ -67,6 +86,36 @@ def register():
     db.session.add(user)
     db.session.commit()
     return jsonify({"user": user.to_public()}), 201
+
+# -------users intrest------
+@app.route("/user/general", methods=["POST"])
+@jwt_required()
+def save_general():
+    data = request.get_json()
+    user_id = get_jwt_identity()
+    dob = data.get("dob")
+    gender = data.get("gender")
+    purpose = data.get("purpose")
+    likes = data.get("likes", [])
+    other_likes = data.get("other_likes", "")
+
+    # Save DOB, gender, purpose in user table
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    user.dob = dob
+    user.gender = gender
+    user.purpose = purpose
+    db.session.commit()
+
+    # Save interests in relational table
+    for interest in likes + ([other_likes] if other_likes else []):
+        db.session.add(UserInterest(user_id=user_id, interest=interest))
+    db.session.commit()
+
+    return jsonify({"message": "General info saved successfully"}), 200
+
 
 @app.post("/auth/login")
 def login():
