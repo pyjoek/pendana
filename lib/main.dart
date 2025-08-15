@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
                         height: height * 0.06,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Color(0xFFE28A89)
+                          color: Colors.pink
                         ),
                       ),
                     );

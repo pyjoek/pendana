@@ -3,15 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:pendana/home.dart';
 
 class General extends StatefulWidget {
-  final String name;
-  final String phone;
-  final String password;
 
   const General({
     super.key,
-    required this.name,
-    required this.phone,
-    required this.password,
   });
 
   @override
@@ -283,15 +277,7 @@ class _GeneralState extends State<General> {
                                 DateTime.now().day < selectedDate!.day)) {
                           age--;
                         }
-                        print("Name: ${widget.name}");
-                        print("Phone: ${widget.phone}");
-                        print("Password: ${widget.password}");
-                        print("Age: $age");
-                        print("Gender: $gender");
-                        print("Selected Likes: $selectedLikes");
-                        print("Other Likes: ${likesController.text}");
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Home(name: widget.name, phone: widget.phone, password: widget.password, age: age, gender: gender, likes: likesController.text)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
                       },
                       child: const Text("Finish"),
                     ),

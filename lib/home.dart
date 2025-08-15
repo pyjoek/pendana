@@ -5,20 +5,8 @@ import 'package:pendana/profile.dart';
 class Home extends StatefulWidget {
   const Home({
     super.key,
-    required this.name,
-    required this.phone,
-    required this.password,
-    required this.age,
-    required this.gender,
-    required this.likes,
   });
 
-  final String name;
-  final String phone;
-  final String password;
-  final int age;
-  final String gender;
-  final String likes;
 
   @override
   State<Home> createState() => _HomeState();
@@ -51,11 +39,7 @@ class _HomeState extends State<Home> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Name: ${widget.name}"),
-          Text("Phone: ${widget.phone}"),
-          Text("Age: ${widget.age}"),
-          Text("Gender: ${widget.gender}"),
-          Text("Likes: ${widget.likes}"),
+         
         ],
       ),
     );
