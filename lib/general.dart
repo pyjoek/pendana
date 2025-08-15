@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:pendana/home.dart';
 
 class General extends StatefulWidget {
-  final int userId; 
+  final userId; 
 
   const General({super.key, required this.userId});
 
@@ -76,13 +76,21 @@ class _GeneralState extends State<General> {
     );
   }
 
-  Future<void> submitData() async {
+  Future<void> submitData(age) async {
     if (gender.isEmpty || purpose.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select gender and purpose")),
       );
       return;
     }
+
+    final payload = {
+      "user_id": widget.userId, // pass user id from login
+      "age": age,
+      "gender": gender,
+      "purpose": purpose,
+      "interests": selectedLikes.toList(),
+    };
 
     setState(() {
       _loading = true;
@@ -97,12 +105,9 @@ class _GeneralState extends State<General> {
 
       for (String interest in interests) {
         final response = await http.post(
-          Uri.parse("http://127.0.0.1:5000/user/interests"),
+          Uri.parse("http://127.0.0.1:5000/user_general"),
           headers: {"Content-Type": "application/json"},
-          body: jsonEncode({
-            "user_id": widget.userId,
-            "interest": interest,
-          }),
+          body: jsonEncode(payload),
         );
 
         if (response.statusCode != 201) {
@@ -347,7 +352,23 @@ class _GeneralState extends State<General> {
                             backgroundColor: Colors.grey.shade300),
                         child: const Text("Previous")),
                     ElevatedButton(
-                        onPressed: _loading ? null : submitData,
+                        onPressed: _loading
+                            ? null
+                            : () {
+                                if (selectedDate != null) {
+                                  int age = DateTime.now().year - selectedDate!.year;
+                                  if (DateTime.now().month < selectedDate!.month ||
+                                      (DateTime.now().month == selectedDate!.month &&
+                                          DateTime.now().day < selectedDate!.day)) {
+                                    age--;
+                                  }
+                                  submitData(age);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text("Please select your date of birth")),
+                                  );
+                                }
+                              },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.pink),
                         child: _loading

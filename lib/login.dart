@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
       final body = jsonDecode(response.body);
       final accessToken = body['access_token'];
       final user = body['user'];
-      int userId = body['id'];
+      final userId = body['id'];
       
 
       final prefs = await SharedPreferences.getInstance();

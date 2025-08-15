@@ -88,33 +88,31 @@ def register():
     return jsonify({"user": user.to_public()}), 201
 
 # -------users intrest------
-@app.route("/user/general", methods=["POST"])
-@jwt_required()
-def save_general():
+@app.route("/user_general", methods=["POST"])
+def user_general():
     data = request.get_json()
-    user_id = get_jwt_identity()
-    dob = data.get("dob")
+    user_id = data.get("user_id")
+    age = data.get("age")
     gender = data.get("gender")
     purpose = data.get("purpose")
-    likes = data.get("likes", [])
-    other_likes = data.get("other_likes", "")
+    interests = data.get("interests", [])
 
-    # Save DOB, gender, purpose in user table
+    # save age, gender, purpose to Users table
     user = User.query.get(user_id)
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+    if user:
+        user.age = age
+        user.gender = gender
+        user.purpose = purpose
+        db.session.commit()
 
-    user.dob = dob
-    user.gender = gender
-    user.purpose = purpose
+    # save interests to UserInterests table
+    for interest in interests:
+        ui = UserInterests(user_id=user_id, interest=interest)
+        db.session.add(ui)
     db.session.commit()
 
-    # Save interests in relational table
-    for interest in likes + ([other_likes] if other_likes else []):
-        db.session.add(UserInterest(user_id=user_id, interest=interest))
-    db.session.commit()
+    return jsonify({"message": "User info saved"}), 200
 
-    return jsonify({"message": "General info saved successfully"}), 200
 
 
 @app.post("/auth/login")
