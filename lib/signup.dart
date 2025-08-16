@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pendana/login.dart';
+import 'package:pendana/otp.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -17,7 +18,6 @@ class _SignUpState extends State<SignUp> {
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
-  final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   String gender = "Male"; // default
 
@@ -27,7 +27,6 @@ class _SignUpState extends State<SignUp> {
   Future<void> _signUp() async {
     if (nameController.text.isEmpty ||
         emailController.text.isEmpty ||
-        phoneController.text.isEmpty ||
         passwordController.text.isEmpty) {
       _showMessage("Please fill in all fields");
       return;
@@ -39,13 +38,13 @@ class _SignUpState extends State<SignUp> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://127.0.0.1:5000/auth/register"), // <-- update IP
+        Uri.parse("http://127.0.0.1:8000/api/register"), // <-- update IP
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "name": nameController.text.trim(),
           "email": emailController.text.trim(),
           "password": passwordController.text,
-          // phone and gender can be sent if backend supports
+          'gender': gender,
         }),
       );
 
@@ -53,13 +52,14 @@ class _SignUpState extends State<SignUp> {
         _loading = false;
       });
 
+
       if (response.statusCode == 201) {
         final data = jsonDecode(response.body);
         _showMessage("Signup successful! Welcome ${data['user']['name']}");
 
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Login()),
+          MaterialPageRoute(builder: (_) => OtpPage(email: emailController.text.trim())),
         );
       } else {
         final data = jsonDecode(response.body);
@@ -130,8 +130,6 @@ class _SignUpState extends State<SignUp> {
                       buildTextField("Full Name", nameController, false),
                       SizedBox(height: height * 0.02),
                       buildTextField("Email", emailController, false),
-                      SizedBox(height: height * 0.02),
-                      buildTextField("Phone Number", phoneController, false),
                       SizedBox(height: height * 0.02),
                       buildTextField("Password", passwordController, true),
                       SizedBox(height: height * 0.02),

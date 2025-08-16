@@ -34,59 +34,10 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
   bool _loading = false;
 
-  // Future<void> loginUser() async {
-  //   if (email.text.isEmpty || password.text.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Please enter email and password")),
-  //     );
-  //     return;
-  //   }
-
-  //   setState(() => _loading = true);
-
-  //   final url = Uri.parse('http://127.0.0.1:5000/auth/login'); // replace YOUR_SERVER_IP
-  //   try {
-  //     final response = await http.post(
-  //       url,
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode({
-  //         'email': email.text.trim(),
-  //         'password': password.text,
-  //       }),
-  //     );
-
-  //     setState(() => _loading = false);
-
-  //     final data = jsonDecode(response.body);
-
-  //     if (response.statusCode == 200) {
-  //       // Successful login
-  //       String accessToken = data['access_token'];
-  //       String refreshToken = data['refresh_token'];
-  //       print("Login Success! Access Token: $accessToken");
-
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("Login Successful!")),
-  //       );
-
-  //       // TODO: Navigate to main app page
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text(data['error'] ?? 'Login failed')),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     setState(() => _loading = false);
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Error: $e")),
-  //     );
-  //   }
-  // }
-
   Future<void> loginUser() async {
   final emailText = email.text.trim();
   final passText = password.text;
-  final apiBase = 'http://127.0.0.1:5000';
+  final apiBase = 'http://127.0.0.1:8000/api';
 
   if (emailText.isEmpty || passText.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -94,16 +45,19 @@ class _LoginPageState extends State<LoginPage> {
     );
     return;
   }
+  
 
   setState(() => _loading = true);
 
   try {
-    final url = Uri.parse('$apiBase/auth/login');
+    final url = Uri.parse('$apiBase/login');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': emailText, 'password': passText}),
     );
+
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
