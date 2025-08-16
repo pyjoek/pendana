@@ -30,7 +30,6 @@ class _GeneralState extends State<General> {
 
   Set<String> selectedLikes = {};
   DateTime? selectedDate;
-  String gender = '';
   String purpose = '';
   bool _loading = false;
 
@@ -77,7 +76,7 @@ class _GeneralState extends State<General> {
   }
 
   Future<void> submitData(age) async {
-    if (gender.isEmpty || purpose.isEmpty) {
+    if (purpose.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select gender and purpose")),
       );
@@ -87,7 +86,6 @@ class _GeneralState extends State<General> {
     final payload = {
       "user_id": widget.userId, // pass user id from login
       "age": age,
-      "gender": gender,
       "purpose": purpose,
       "interests": selectedLikes.toList(),
     };
@@ -187,56 +185,6 @@ class _GeneralState extends State<General> {
                   onPressed: validateAndNext,
                   child: const Text("Next"),
                 ),
-              ],
-            ),
-          ),
-
-          // Step 2: Gender
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Select your gender:",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(color: Colors.pink),
-                ),
-                const SizedBox(height: 20),
-                RadioListTile(
-                  title: const Text("Male"),
-                  value: "Male",
-                  groupValue: gender,
-                  onChanged: (value) {
-                    setState(() => gender = value.toString());
-                  },
-                ),
-                RadioListTile(
-                  title: const Text("Female"),
-                  value: "Female",
-                  groupValue: gender,
-                  onChanged: (value) {
-                    setState(() => gender = value.toString());
-                  },
-                ),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                        onPressed: prevPage,
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey.shade300),
-                        child: const Text("Previous")),
-                    ElevatedButton(
-                        onPressed: nextPage,
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.pink),
-                        child: const Text("Next")),
-                  ],
-                )
               ],
             ),
           ),
