@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:pendana/general.dart';
+
 class OtpPage extends StatefulWidget {
   final String email; // email passed from signup page
 
@@ -14,6 +16,8 @@ class OtpPage extends StatefulWidget {
 class _OtpPageState extends State<OtpPage> {
   final TextEditingController otpController = TextEditingController();
   bool isLoading = false;
+  String otpp = '';
+  String userId = '';
 
   Future<void> verifyOtp() async {
     setState(() => isLoading = true);
@@ -32,6 +36,9 @@ class _OtpPageState extends State<OtpPage> {
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
+      userId = body['user'];
+      final ottp = body['otp'];
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(body['message'] ?? 'Verified!')),
       );
@@ -129,6 +136,20 @@ class _OtpPageState extends State<OtpPage> {
                   },
                   child: const Text(
                     "Resend OTP",
+                    style: TextStyle(color: Color(0xFFE63946)),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                     Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => General(userId: userId), // <-- go to General
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "Skip",
                     style: TextStyle(color: Color(0xFFE63946)),
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:pendana/general.dart';
+import 'package:pendana/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pendana/signup.dart';
 
@@ -75,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => General(userId: userId), // <-- go to General
+          builder: (_) => Home(), // <-- go to General
         ),
       );
 

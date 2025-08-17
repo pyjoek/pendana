@@ -30,23 +30,25 @@ class AuthController extends Controller
         ]);
 
         $otp = rand(100000, 999999); // 6 digit random number
+        $user = User::where('email', $request->email)->first()->id;
 
-        // Store OTP in DB
-        DB::table('user_otps')->updateOrInsert(
-            ['email' => $request->email],
-            [
-                'otp' => $otp,
-                'created_at' => Carbon::now()
-            ]
-        );
+        UserOtp::create([
+            'user_id' => $user,
+            'otp' => $otp,
+            'expires_at' => Carbon::now()->addMinutes(5),
+        ]);
+
+        // send OTP
+        // Mail::to($user->email)->send(new OtpMail($otp));
 
         // Send OTP via email
         Mail::raw("Your OTP code is: $otp", function ($message) use ($request) {
             $message->to($request->email)
                 ->subject('Your OTP Verification Code');
         });
+        Log::info('OTP sent to '.$request->email.' code: '.$otp);
 
-        return response()->json(['message' => 'OTP sent successfully']);
+        return response()->json(['message' => 'OTP sent successfully', 'user' => $user, 'otp' => $otp]);
     }
 
     public function verifyOtp(Request $request) {
