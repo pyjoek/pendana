@@ -84,11 +84,12 @@ class _GeneralState extends State<General> {
     }
 
     final payload = {
-      "user_id": widget.userId, // pass user id from login
-      "age": age,
+      "user_id": widget.userId,
+      "dob": selectedDate?.toIso8601String(), // backend expects a date
       "purpose": purpose,
-      "interests": selectedLikes.toList(),
+      "interests": selectedLikes.toList(), // backend must allow array
     };
+    print(payload);
 
     setState(() {
       _loading = true;
@@ -101,30 +102,35 @@ class _GeneralState extends State<General> {
         interests.add(likesController.text);
       }
 
-      for (String interest in interests) {
-        final response = await http.post(
-          Uri.parse("http://127.0.0.1:5000/user_general"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(payload),
-        );
-
-        if (response.statusCode != 201) {
-          final data = jsonDecode(response.body);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Error saving interest: ${data['error']}")),
-          );
-        }
-      }
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()),
+      final response = await http.post(
+        Uri.parse("http://127.0.0.1:8000/api/user_general"), // add /api if your Laravel uses it
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(payload),
       );
+
+      if (response.statusCode == 201) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
+      } else {
+          try {
+            final data = jsonDecode(response.body);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Error: ${data['message']}")),
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Unexpected error: ${response.body}")),
+            );
+          }
+        }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
+        SnackBar(content: Text("Exception: $e")),
       );
     }
+
 
     setState(() {
       _loading = false;
@@ -259,14 +265,6 @@ class _GeneralState extends State<General> {
                       .textTheme
                       .titleLarge!
                       .copyWith(color: Colors.pink),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: likesController,
-                  decoration: const InputDecoration(
-                    labelText: "Other likes (optional)",
-                    border: OutlineInputBorder(),
-                  ),
                 ),
                 const SizedBox(height: 20),
                 Wrap(

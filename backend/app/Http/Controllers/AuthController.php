@@ -20,7 +20,9 @@ class AuthController extends Controller
             'gender' => $request->gender,
         ]);
 
-        return response()->json(['user' => $user], 201);
+        $users = User::where('email', $request->email)->first()->id;
+
+        return response()->json(['user' => $user, 'userId' => $users], 201);
     }
 
     public function sendOtp(Request $request)
@@ -46,7 +48,6 @@ class AuthController extends Controller
             $message->to($request->email)
                 ->subject('Your OTP Verification Code');
         });
-        Log::info('OTP sent to '.$request->email.' code: '.$otp);
 
         return response()->json(['message' => 'OTP sent successfully', 'user' => $user, 'otp' => $otp]);
     }
@@ -102,5 +103,10 @@ class AuthController extends Controller
 
     public function profile() {
         return response()->json(auth()->user());
+    }
+
+    public function logout(Request $request) {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Logged out successfully']);
     }
 }

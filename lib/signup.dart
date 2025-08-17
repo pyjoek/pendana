@@ -56,10 +56,11 @@ class _SignUpState extends State<SignUp> {
       if (response.statusCode == 201) {
         final data = jsonDecode(response.body);
         _showMessage("Signup successful! Welcome ${data['user']['name']}");
+        print(data['userId']);
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => OtpPage(email: emailController.text.trim())),
+          MaterialPageRoute(builder: (_) => OtpPage(email: emailController.text.trim(), userId: data['userId'])),
         );
       } else {
         final data = jsonDecode(response.body);

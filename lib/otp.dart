@@ -6,8 +6,9 @@ import 'package:pendana/general.dart';
 
 class OtpPage extends StatefulWidget {
   final String email; // email passed from signup page
+  final int userId; // userId passed from signup page
 
-  const OtpPage({super.key, required this.email});
+  const OtpPage({super.key, required this.email, required this.userId});
 
   @override
   _OtpPageState createState() => _OtpPageState();
@@ -16,13 +17,18 @@ class OtpPage extends StatefulWidget {
 class _OtpPageState extends State<OtpPage> {
   final TextEditingController otpController = TextEditingController();
   bool isLoading = false;
-  String otpp = '';
-  String userId = '';
+  late int userId;
+
+  @override
+  void initState() {
+    super.initState();
+    userId = widget.userId;
+  }
 
   Future<void> verifyOtp() async {
     setState(() => isLoading = true);
 
-    final url = Uri.parse("http://10.0.2.2:8000/api/verify-otp"); 
+    final url = Uri.parse("http://127.0.0.1:8000/api/verify-otp"); 
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -36,9 +42,6 @@ class _OtpPageState extends State<OtpPage> {
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
-      userId = body['user'];
-      final ottp = body['otp'];
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(body['message'] ?? 'Verified!')),
       );
@@ -141,10 +144,11 @@ class _OtpPageState extends State<OtpPage> {
                 ),
                 TextButton(
                   onPressed: () {
+                    print(widget.userId);
                      Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => General(userId: userId), // <-- go to General
+                        builder: (_) => General(userId: widget.userId), // <-- go to General
                       ),
                     );
                   },

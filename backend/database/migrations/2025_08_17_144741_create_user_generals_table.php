@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_interests', function (Blueprint $table) {
+        Schema::create('user_generals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('interest', 100);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->date('dob');
+            $table->string('purpose');
+            $table->string('interests');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_interests');
+        Schema::dropIfExists('user_generals');
     }
 };
