@@ -216,6 +216,7 @@ class _SignUpState extends State<SignUp> {
     return TextField(
       controller: controller,
       obscureText: isPassword ? _obscureText : false,
+      keyboardType: hint == "Email" ? TextInputType.emailAddress : TextInputType.text,
       decoration: InputDecoration(
         suffixIcon: isPassword
             ? IconButton(
@@ -233,6 +234,15 @@ class _SignUpState extends State<SignUp> {
         contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
       ),
+      onChanged: (value) {
+        if (hint == "Email" && value.isNotEmpty) {
+          final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+          if (!emailRegex.hasMatch(value)) {
+            _showMessage("Please enter a valid email address");
+          }
+        }
+      },
     );
   }
+
 }

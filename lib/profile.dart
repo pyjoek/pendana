@@ -23,7 +23,7 @@ class _ProfileState extends State<Profile> {
       );
       // Optionally, you can clear user data or navigate to login screen
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
+      await prefs.clear(); 
       Navigator.pushReplacementNamed(context, '/login');
     } else {
       // Handle logout failure if needed
