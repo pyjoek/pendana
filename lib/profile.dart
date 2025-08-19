@@ -17,7 +17,6 @@ class _ProfileState extends State<Profile> {
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      final body = response.body;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Logged out successfully')),
       );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:pendana/general.dart';
 import 'package:pendana/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pendana/signup.dart';
@@ -64,7 +63,6 @@ class _LoginPageState extends State<LoginPage> {
       final body = jsonDecode(response.body);
       final accessToken = body['access_token'];
       final user = body['user'];
-      final userId = body['id'];
       
 
       final prefs = await SharedPreferences.getInstance();
