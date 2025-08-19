@@ -38,5 +38,9 @@ Route::post('/messages', [MessageController::class, 'store']); // send message
 Route::get('/messages/{user1}/{user2}', [MessageController::class, 'conversation']); // get chat between two users
 Route::get('/chats/{userId}', [MessageController::class, 'chats']); // list all chats for a user
 
+Route::get('/chats/{userId}', [MessageController::class, 'chats']);
+Route::get('/messages/{userId}/{otherUserId}', [MessageController::class, 'messages']);
+
+
 // routes/api.php
 Route::get('/users/{id}', [AuthController::class, 'listOtherUsers']);

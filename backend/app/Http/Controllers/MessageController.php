@@ -79,4 +79,21 @@ class MessageController extends Controller
 
         return response()->json($result);
     }
+
+    public function messages($userId, $otherUserId)
+    {
+        $messages = Message::where(function ($q) use ($userId, $otherUserId) {
+                $q->where('sender_id', $userId)
+                ->where('receiver_id', $otherUserId);
+            })
+            ->orWhere(function ($q) use ($userId, $otherUserId) {
+                $q->where('sender_id', $otherUserId)
+                ->where('receiver_id', $userId);
+            })
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return response()->json($messages);
+    }
+
 }
