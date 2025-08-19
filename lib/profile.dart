@@ -11,59 +11,122 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  String? name;
+  String? email;
+  String? phone;
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString("user_name") ?? "Guest User";
+      email = prefs.getString("user_email") ?? "guest@example.com";
+      phone = prefs.getString("user_phone") ?? "Not provided"; // if you store phone
+      // you also have access to id and token if needed
+      int? id = prefs.getInt("userId");
+      String? token = prefs.getString("access_token");
+      print("Loaded userId: $id, token: $token"); 
+    });
+  }
 
   Future<void> logout() async {
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8000/api/logout'),
       headers: {'Content-Type': 'application/json'},
     );
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Logged out successfully')),
+        const SnackBar(content: Text('Logged out successfully')),
       );
-      // Optionally, you can clear user data or navigate to login screen
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.clear(); 
-      Navigator.pushReplacementNamed(context, '/login');
-    } else {
-      // Handle logout failure if needed
-      print('Logout failed: ${response.statusCode}');
     }
-    // You can also navigate to the login screen if needed
-    // For now, just print a message
+
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const Login()), // Replace Profile() with your Login screen widget
+      MaterialPageRoute(builder: (context) => const Login()),
       (Route<dynamic> route) => false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final avatarLetter = name != null && name!.isNotEmpty
+        ? name![0].toUpperCase()
+        : "U";
+
     return Scaffold(
+      appBar: AppBar(title: const Text("Profile")),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
+              // Avatar
               CircleAvatar(
-                child: Text("R"),
-                radius: 20,
-              ),
-              InkWell(
-                onTap: () {
-                  // Navigate to edit profile page
-                  logout();
-                },
+                radius: 50,
                 child: Text(
-                  "Log Out",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  avatarLetter,
+                  style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // User Info
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      infoRow("Name", name ?? ""),
+                      const Divider(),
+                      infoRow("Email", email ?? ""),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              // Logout Button
+              ElevatedButton.icon(
+                onPressed: logout,
+                icon: const Icon(Icons.logout),
+                label: const Text("Log Out"),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget infoRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Flexible(
+          child: Text(value, overflow: TextOverflow.ellipsis),
+        ),
+      ],
     );
   }
 }

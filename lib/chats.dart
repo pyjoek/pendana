@@ -39,10 +39,11 @@ class _ChatListPageState extends State<ChatListPage> {
         itemBuilder: (context, index) {
           final chat = chats[index];
           final otherUserId = chat["other_user_id"].toString();
+          final userName = chat["other_user_name"].toString();
           final lastMsg = chat["messages"][0]["message"];
 
           return ListTile(
-            title: Text("User $otherUserId"),
+            title: Text(userName),
             subtitle: Text(lastMsg),
             onTap: () {
               Navigator.push(
