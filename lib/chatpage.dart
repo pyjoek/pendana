@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,6 +21,10 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     fetchMessages();
+
+    Timer.periodic(Duration(seconds: 1), (timer) {
+    fetchMessages();
+  });
   }
 
   Future<void> fetchMessages() async {
@@ -45,7 +50,7 @@ class _ChatPageState extends State<ChatPage> {
       }),
     );
 
-    if (res.statusCode == 200) {
+    if (res.statusCode == 201) {
       _controller.clear();
       fetchMessages(); // reload after sending
     }
