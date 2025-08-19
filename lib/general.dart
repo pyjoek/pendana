@@ -31,6 +31,7 @@ class _GeneralState extends State<General> {
   Set<String> selectedLikes = {};
   DateTime? selectedDate;
   String purpose = '';
+  final addr = "10.0.2.2:8000/api";
   bool _loading = false;
 
   void validateAndNext() {
@@ -103,15 +104,16 @@ class _GeneralState extends State<General> {
       }
 
       final response = await http.post(
-        Uri.parse("http://127.0.0.1:8000/api/user_general"), // add /api if your Laravel uses it
+        Uri.parse("http://$addr/user_general"), // add /api if your Laravel uses it
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(payload),
       );
 
       if (response.statusCode == 201) {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const Home()),
+          (Route<dynamic> route) => false, // removes all previous routes
         );
       } else {
           try {
@@ -125,7 +127,8 @@ class _GeneralState extends State<General> {
             );
           }
         }
-    } catch (e) {
+    } 
+    catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Exception: $e")),
       );

@@ -20,6 +20,8 @@ class _SignUpState extends State<SignUp> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   String gender = "Male"; // default
+  final addr = "10.0.2.2:8000/api";
+  // final addr = "127.0.0.1:8000/api";
 
   bool _obscureText = true;
   bool _loading = false;
@@ -38,7 +40,7 @@ class _SignUpState extends State<SignUp> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://127.0.0.1:8000/api/register"), // <-- update IP
+        Uri.parse("http://$addr/register"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "name": nameController.text.trim(),
@@ -234,10 +236,10 @@ class _SignUpState extends State<SignUp> {
         contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
       ),
-      onChanged: (value) {
-        if (hint == "Email" && value.isNotEmpty) {
+      onEditingComplete: () {
+        if (hint == "Email" && controller.text.isNotEmpty) {
           final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-          if (!emailRegex.hasMatch(value)) {
+          if (!emailRegex.hasMatch(controller.text)) {
             _showMessage("Please enter a valid email address");
           }
         }
