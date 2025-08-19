@@ -17,7 +17,7 @@ class MessageController extends Controller
         ]);
 
         $message = Message::create([
-            'sender_id' => Auth::id(), // logged-in user
+            'sender_id' => $request->sender_id, // logged-in user
             'receiver_id' => $request->receiver_id,
             'message' => $request->message,
         ]);

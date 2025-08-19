@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pendana/chatpage.dart';
 import 'package:pendana/chats.dart';
 import 'package:pendana/profile.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({super.key, required this.userId});
+
+  final int userId;
 
   @override
   State<Home> createState() => _HomeState();
@@ -21,7 +22,7 @@ class _HomeState extends State<Home> {
     _pages = [
       const Center(child: Text("Encounters Page")), // 👀 Encounters
       const Center(child: Text("Likes Page")),      // ❤️ Likes
-      ChatListPage(),                             // 💬 Chats
+      ChatListPage(userId: widget.userId),                             // 💬 Chats
       const Profile(),                              // ⚙️ Settings/Profile
     ];
   }

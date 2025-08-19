@@ -98,6 +98,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'user' => $user,
+            'userId' => $user->id
         ]);
     }
 
@@ -108,5 +109,10 @@ class AuthController extends Controller
     public function logout(Request $request) {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out successfully']);
+    }
+
+    public function listOtherUsers($id)
+    {
+        return User::where('id', '!=', $id)->get(['id','name']);
     }
 }

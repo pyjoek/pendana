@@ -1,50 +1,83 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class ChatPage extends StatefulWidget {
-  final int userId;
-  final String userName;
+  final int userId;      // current logged-in user
+  final int receiverId;  // the person you’re chatting with
 
-  const ChatPage({super.key, required this.userId, required this.userName});
+  const ChatPage({super.key, required this.userId, required this.receiverId});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final TextEditingController _messageController = TextEditingController();
-  final List<String> _messages = [];
+  final TextEditingController _controller = TextEditingController();
+  List<dynamic> messages = [];
 
-  void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
-    setState(() {
-      _messages.add(_messageController.text.trim());
-    });
-    _messageController.clear();
+  @override
+  void initState() {
+    super.initState();
+    fetchMessages();
+  }
+
+  Future<void> fetchMessages() async {
+    final res = await http.get(Uri.parse(
+        "http://127.0.0.1:8000/api/messages/${widget.userId}/${widget.receiverId}"));
+    if (res.statusCode == 200) {
+      setState(() {
+        messages = jsonDecode(res.body);
+      });
+    }
+  }
+
+  Future<void> sendMessage() async {
+    if (_controller.text.trim().isEmpty) return;
+
+    final res = await http.post(
+      Uri.parse("http://127.0.0.1:8000/api/messages"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "sender_id": widget.userId,
+        "receiver_id": widget.receiverId,
+        "message": _controller.text.trim(),
+      }),
+    );
+
+    if (res.statusCode == 200) {
+      _controller.clear();
+      fetchMessages(); // reload after sending
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.userName)),
+      appBar: AppBar(title: Text("Chat with ${widget.receiverId}")),
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: _messages.length,
+              itemCount: messages.length,
               itemBuilder: (context, index) {
+                final msg = messages[index];
+                final isMe = msg["sender_id"] == widget.userId;
+
                 return Align(
-                  alignment: Alignment.centerRight,
+                  alignment:
+                      isMe ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    margin: const EdgeInsets.all(4),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.blueAccent,
+                      color: isMe ? Colors.blueAccent : Colors.grey[300],
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      _messages[index],
-                      style: const TextStyle(color: Colors.white),
+                      msg["message"],
+                      style: TextStyle(
+                          color: isMe ? Colors.white : Colors.black87),
                     ),
                   ),
                 );
@@ -58,17 +91,17 @@ class _ChatPageState extends State<ChatPage> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _messageController,
+                    controller: _controller,
                     decoration: const InputDecoration(
                       hintText: "Type a message...",
                       border: InputBorder.none,
                     ),
-                    onSubmitted: (_) => _sendMessage(),
+                    onSubmitted: (_) => sendMessage(),
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.send, color: Colors.blue),
-                  onPressed: _sendMessage,
+                  onPressed: sendMessage,
                 ),
               ],
             ),

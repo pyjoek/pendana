@@ -58,24 +58,23 @@ class _LoginPageState extends State<LoginPage> {
       body: jsonEncode({'email': emailText, 'password': passText}),
     );
 
-    print(response.statusCode);
-
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       final accessToken = body['access_token'];
       final user = body['user'];
-      
+      final userId = body['userId'];
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('access_token', accessToken);
       await prefs.setString('user_email', user['email'] ?? '');
       await prefs.setString('user_name', user['name'] ?? '');
+      await prefs.setInt('userId', userId); // make sure backend returns id
 
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => Home(), // <-- go to General
+          builder: (_) => Home(userId: userId),
         ),
       );
 

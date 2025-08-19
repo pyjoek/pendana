@@ -112,7 +112,7 @@ class _GeneralState extends State<General> {
       if (response.statusCode == 201) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const Home()),
+          MaterialPageRoute(builder: (context) => Home(userId: widget.userId)),
           (Route<dynamic> route) => false, // removes all previous routes
         );
       } else {
