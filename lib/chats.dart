@@ -1,74 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:pendana/chatpage.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+class ChatListPage extends StatelessWidget {
+  final List<Map<String, dynamic>> chats = [
+    {"id": 1, "name": "Alice", "lastMessage": "Hey, how are you?"},
+    {"id": 2, "name": "Bob", "lastMessage": "See you tomorrow!"},
+    {"id": 3, "name": "Charlie", "lastMessage": "Let's meet up."},
+  ];
 
-  @override
-  State<ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
-  final TextEditingController _messageController = TextEditingController();
-  final List<String> _messages = [];
-
-  void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
-    setState(() {
-      _messages.add(_messageController.text.trim());
-    });
-    _messageController.clear();
-  }
+  ChatListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: _messages.length,
-            itemBuilder: (context, index) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4),
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    _messages[index],
-                    style: const TextStyle(color: Colors.white),
+    return Scaffold(
+      appBar: AppBar(title: const Text("Chats")),
+      body: ListView.builder(
+        itemCount: chats.length,
+        itemBuilder: (context, index) {
+          final chat = chats[index];
+          return ListTile(
+            leading: CircleAvatar(
+              child: Text(chat["name"][0]), // First letter
+            ),
+            title: Text(chat["name"]),
+            subtitle: Text(chat["lastMessage"]),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ChatPage(
+                    userId: chat["id"],
+                    userName: chat["name"],
                   ),
                 ),
               );
             },
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          color: Colors.grey[200],
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _messageController,
-                  decoration: const InputDecoration(
-                    hintText: "Type a message...",
-                    border: InputBorder.none,
-                  ),
-                  onSubmitted: (_) => _sendMessage(),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.send, color: Colors.blue),
-                onPressed: _sendMessage,
-              ),
-            ],
-          ),
-        ),
-      ],
+          );
+        },
+      ),
     );
   }
 }

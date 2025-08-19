@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pendana/chatpage.dart';
 import 'package:pendana/chats.dart';
 import 'package:pendana/profile.dart';
 
@@ -20,7 +21,7 @@ class _HomeState extends State<Home> {
     _pages = [
       const Center(child: Text("Encounters Page")), // 👀 Encounters
       const Center(child: Text("Likes Page")),      // ❤️ Likes
-      const ChatPage(),                             // 💬 Chats
+      ChatListPage(),                             // 💬 Chats
       const Profile(),                              // ⚙️ Settings/Profile
     ];
   }

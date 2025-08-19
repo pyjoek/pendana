@@ -32,3 +32,8 @@ Route::post('/user_general', [UserGeneralController::class, 'store']);
 
 Route::post('/send-otp', [OtpController::class, 'sendOtp']);
 Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/messages', [MessageController::class, 'store']); // send
+    Route::get('/messages/{receiverId}', [MessageController::class, 'conversation']); // fetch
+});
