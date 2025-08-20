@@ -63,7 +63,10 @@ class _ProfileState extends State<Profile> {
         : "U";
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile")),
+      appBar: AppBar(
+        title: const Text("Profile"),
+        centerTitle: true,
+        ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),

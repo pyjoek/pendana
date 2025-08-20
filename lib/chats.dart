@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:pendana/findusers.dart';
 import 'dart:convert';
 import 'chatpage.dart';
+import 'dart:async';
+
 
 class ChatListPage extends StatefulWidget {
   final int userId;
@@ -19,6 +21,10 @@ class _ChatListPageState extends State<ChatListPage> {
   void initState() {
     super.initState();
     fetchChats();
+
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      fetchChats();
+    });
   }
 
   Future<void> fetchChats() async {
@@ -33,7 +39,10 @@ class _ChatListPageState extends State<ChatListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Chats")),
+      appBar: AppBar(
+        title: const Text("Messages"),
+        centerTitle: true,
+        ),
       body: ListView.builder(
         itemCount: chats.length,
         itemBuilder: (context, index) {
