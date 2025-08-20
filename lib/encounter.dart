@@ -75,7 +75,7 @@ class _EncounterState extends State<Encounter> {
         numberOfCardsDisplayed: 1,
         allowedSwipeDirection: const AllowedSwipeDirection.only(left: true, right: true),
         onSwipe: (prevIndex, currentIndex, direction) {
-          if (!hasUsers || prevIndex == null) return true;
+          if (!hasUsers) return true;
 
           final user = users[prevIndex];
           if (direction == CardSwiperDirection.right) {

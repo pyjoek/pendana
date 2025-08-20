@@ -29,7 +29,6 @@ class _ProfileState extends State<Profile> {
       phone = prefs.getString("user_phone") ?? "Not provided"; // if you store phone
       // you also have access to id and token if needed
       int? id = prefs.getInt("userId");
-      String? token = prefs.getString("access_token");
     });
   }
 
