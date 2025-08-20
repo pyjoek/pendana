@@ -52,6 +52,12 @@ class _ChatListPageState extends State<ChatListPage> {
           final lastMsg = chat["messages"][0]["message"];
 
           return ListTile(
+            leading: CircleAvatar(
+              radius: 30,
+              child: Text(
+                userName[0].toUpperCase()
+                ),
+              ),
             title: Text(userName),
             subtitle: Text(lastMsg),
             onTap: () {

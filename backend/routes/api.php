@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserGeneralController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\EncounterController;
+use App\Http\Controllers\UserGeneralController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,3 +45,7 @@ Route::get('/messages/{userId}/{otherUserId}', [MessageController::class, 'messa
 
 // routes/api.php
 Route::get('/users/{id}', [AuthController::class, 'listOtherUsers']);
+
+Route::get('/encounters/{id}', [EncounterController::class, 'index']); // GET list
+Route::post('/encounters/action', [EncounterController::class, 'action']); // POST like/dislike
+Route::get('/likes/{userId}', [EncounterController::class, 'likes']); // GET likes
