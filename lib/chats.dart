@@ -17,24 +17,41 @@ class ChatListPage extends StatefulWidget {
 class _ChatListPageState extends State<ChatListPage> {
   List<dynamic> chats = [];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchChats();
+  Timer? _chatTimer;
 
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      fetchChats();
-    });
-  }
+@override
+void initState() {
+  super.initState();
+  fetchChats();
+  _chatTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    fetchChats();
+  });
+}
+
+@override
+void dispose() {
+  _chatTimer?.cancel(); // 🔹 Prevent memory leaks
+  super.dispose();
+}
+
 
   Future<void> fetchChats() async {
+  try {
     final res = await http.get(Uri.parse("http://127.0.0.1:8000/api/chats/${widget.userId}"));
     if (res.statusCode == 200) {
+      final data = jsonDecode(res.body);
+
+      if (!mounted) return; // ✅ prevent setState after dispose
+
       setState(() {
-        chats = jsonDecode(res.body);
+        chats = data;
       });
     }
+  } catch (e) {
+    print("Error fetching chats: $e");
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +86,9 @@ class _ChatListPageState extends State<ChatListPage> {
                     receiverId: int.parse(otherUserId),
                   ),
                 ),
-              );
+              ).then((_) {
+                fetchChats(); // 🔹 Refresh when coming back
+              });
             },
           );
         },
@@ -84,7 +103,9 @@ class _ChatListPageState extends State<ChatListPage> {
             MaterialPageRoute(
               builder: (_) => FindUsersPage(currentUserId: widget.userId),
             ),
-          );
+          ).then((_) {
+            fetchChats(); // 🔹 Refresh when coming back
+          });
         },
       ),
     );

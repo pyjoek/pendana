@@ -22,110 +22,147 @@ class _EncounterState extends State<Encounter> {
   }
 
   Future<void> fetchUsers() async {
-    final res = await http.get(Uri.parse("http://127.0.0.1:8000/api/encounters/${widget.currentUserId}"));
-    print("hi");
-    if (res.statusCode == 200) {
-      setState(() {
-        users = jsonDecode(res.body);
-      });
+    try {
+      final res = await http.get(
+        Uri.parse("http://127.0.0.1:8000/api/encounters/${widget.currentUserId}"),
+      );
+
+      if (res.statusCode == 200) {
+        setState(() {
+          users = jsonDecode(res.body);
+        });
+      } else {
+        print("Error fetching users: ${res.statusCode}");
+      }
+    } catch (e) {
+      print("Exception in fetchUsers: $e");
     }
   }
 
-  Future<void> sendAction(int userId, String action) async {
-    // action = "like" or "dislike"
-    await http.post(
-      Uri.parse("http://127.0.0.1:8000/api/encounters/action"),
-      body: {
-        "user_id": userId.toString(),
-        "action": action,
-      },
-    );
+  Future<void> sendAction(int targetId, String action) async {
+    final url = Uri.parse("http://127.0.0.1:8000/api/encounters/action");
+
+    try {
+      final response = await http.post(
+        url,
+        body: {
+          'user_id': widget.currentUserId.toString(),
+          'target_id': targetId.toString(),
+          'action': action,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("✅ Action sent: $action to $targetId");
+      } else {
+        print("❌ Error sending action: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Exception in sendAction: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final hasUsers = users.isNotEmpty;
+    final cardCount = hasUsers ? users.length : 1;
+
     return Scaffold(
       appBar: AppBar(title: const Text("Encounters")),
-      body: users.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : CardSwiper(
-              controller: controller,
-              cardsCount: users.length,
-              allowedSwipeDirection:
-                  const AllowedSwipeDirection.only(left: true, right: true),
-              onSwipe: (prevIndex, currentIndex, direction) {
-                if (prevIndex == null) return true;
+      body: CardSwiper(
+        controller: controller,
+        cardsCount: cardCount,
+        numberOfCardsDisplayed: 1,
+        allowedSwipeDirection: const AllowedSwipeDirection.only(left: true, right: true),
+        onSwipe: (prevIndex, currentIndex, direction) {
+          if (!hasUsers || prevIndex == null) return true;
 
-                final user = users[prevIndex];
-                if (direction == CardSwiperDirection.right) {
-                  // ✅ Like
-                  sendAction(user["id"], "like");
-                } else if (direction == CardSwiperDirection.left) {
-                  // ❌ Dislike
-                  sendAction(user["id"], "dislike");
-                }
-                return true;
-              },
-              cardBuilder: (context, index, percentX, percentY) {
-                final user = users[index];
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 8,
-                        offset: Offset(2, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // User Image
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                          child: user["photo"] != null
-                              ? Image.network(
-                                  user["photo"],
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                )
-                              : Container(
-                                  color: Colors.grey,
-                                  child: const Center(child: Icon(Icons.person, size: 80)),
-                                ),
-                        ),
-                      ),
-                      // User Details
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            Text(
-                              user["name"] ?? "Unknown",
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "${user["age"] ?? "N/A"} years old",
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(user["bio"] ?? "No bio available"),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+          final user = users[prevIndex];
+          if (direction == CardSwiperDirection.right) {
+            sendAction(user["id"], "like");
+          } else if (direction == CardSwiperDirection.left) {
+            sendAction(user["id"], "dislike");
+          }
+
+          setState(() {
+            users.removeAt(prevIndex);
+          });
+
+          return true;
+        },
+        cardBuilder: (context, index, percentX, percentY) {
+          if (!hasUsers) {
+            // 🔹 Always show this card when list is empty
+            return Card(
+              color: Colors.grey[200],
+              child: const Center(
+                child: Text(
+                  "No more users 😢",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+            );
+          }
+
+          final user = users[index];
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 8,
+                  offset: Offset(2, 4),
+                ),
+              ],
             ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // User Image
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    child: user["photo"] != null
+                        ? Image.network(
+                            user["photo"],
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          )
+                        : Container(
+                            color: Colors.grey,
+                            child: const Center(child: Icon(Icons.person, size: 80)),
+                          ),
+                  ),
+                ),
+                // User Details
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Text(
+                        user["name"] ?? "Unknown",
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "${user["age"] ?? "N/A"} years old",
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(user["bio"] ?? "No bio available"),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

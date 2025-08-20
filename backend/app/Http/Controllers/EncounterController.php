@@ -29,7 +29,7 @@ class EncounterController extends Controller
             'target_id' => 'required|integer',
             'action' => 'required|in:like,dislike',
         ]);
-
+        
         $encounter = Encounter::updateOrCreate(
             ['user_id' => $request->user_id, 'target_id' => $request->target_id],
             ['action' => $request->action]
@@ -49,4 +49,24 @@ class EncounterController extends Controller
 
         return response()->json($likes);
     }
+
+    public function likedMe($userId)
+    {
+        $users = Encounter::where('target_id', $userId)
+            ->where('action', 'like')
+            ->with('user') // eager load the liker user relationship
+            ->get()
+            ->map(function($encounter) {
+                return [
+                    'id' => $encounter->user->id,
+                    'name' => $encounter->user->name,
+                    'gender' => $encounter->user->gender,
+                    'age' => $encounter->user->age,
+                    'photo' => $encounter->user->photo,
+                ];
+            });
+
+        return response()->json($users);
+    }
+
 }

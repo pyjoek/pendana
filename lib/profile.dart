@@ -30,7 +30,6 @@ class _ProfileState extends State<Profile> {
       // you also have access to id and token if needed
       int? id = prefs.getInt("userId");
       String? token = prefs.getString("access_token");
-      print("Loaded userId: $id, token: $token"); 
     });
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pendana/chats.dart';
 import 'package:pendana/encounter.dart';
+import 'package:pendana/likedme.dart';
 import 'package:pendana/profile.dart';
 
 class Home extends StatefulWidget {
@@ -22,7 +23,7 @@ class _HomeState extends State<Home> {
     super.initState();
     _pages = [
       Encounter(currentUserId: widget.userId,), // 👀 Encounters
-      const Center(child: Text("Likes Page")),      // ❤️ Likes
+      LikedMePage(userId: widget.userId),      // ❤️ Likes
       ChatListPage(userId: widget.userId),                             // 💬 Chats
       const Profile(),                              // ⚙️ Settings/Profile
     ];

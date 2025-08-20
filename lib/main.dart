@@ -7,12 +7,10 @@ import 'dart:io';
 void main() async {
 
   if (Platform.isAndroid || Platform.isIOS) {
-    print("Running on mobile");
+    // print("Running on mobile");
   } else {
-    print("Not running on mobile. Splash won’t show.");
+    // print("Not running on mobile. Splash won’t show.");
   }
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(MyApp());
 }
 
@@ -29,14 +27,12 @@ class _MyAppState extends State<MyApp> {
     bool isFirstLaunch = prefs.getBool('seenSplash') ?? false;
 
     if (!isFirstLaunch) {
-      print('First time opening app...');
+      // print('First time opening app...');
       await prefs.setBool('seenSplash', true);
       await Future.delayed(Duration(seconds: 3));
     } else {
-      print('Not first launch. Skipping splash delay.');
+      // print('Not first launch. Skipping splash delay.');
     }
-
-    // FlutterNativeSplash.remove(); // Remove native splash screen
   }
 
   final Color background = Color(0xFFFFF9F6);
@@ -95,7 +91,6 @@ class _MyAppState extends State<MyApp> {
                     return InkWell(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) => Login()));
-                        print('logging....');
                       },
                       child: Text(
                         "ALREADY HAVE AN ACCOUNT?",

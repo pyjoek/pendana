@@ -35,9 +35,8 @@ Route::post('/user_general', [UserGeneralController::class, 'store']);
 Route::post('/send-otp', [OtpController::class, 'sendOtp']);
 Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
 
-Route::post('/messages', [MessageController::class, 'store']); // send message
-// Route::get('/messages/{user1}/{user2}', [MessageController::class, 'conversation']); // get chat between two users
-Route::get('/chats/{userId}', [MessageController::class, 'chats']); // list all chats for a user
+Route::post('/messages', [MessageController::class, 'store']); 
+Route::get('/chats/{userId}', [MessageController::class, 'chats']); 
 
 Route::get('/chats/{userId}', [MessageController::class, 'chats']);
 Route::get('/messages/{userId}/{otherUserId}', [MessageController::class, 'messages']);
@@ -46,6 +45,8 @@ Route::get('/messages/{userId}/{otherUserId}', [MessageController::class, 'messa
 // routes/api.php
 Route::get('/users/{id}', [AuthController::class, 'listOtherUsers']);
 
-Route::get('/encounters/{id}', [EncounterController::class, 'index']); // GET list
-Route::post('/encounters/action', [EncounterController::class, 'action']); // POST like/dislike
-Route::get('/likes/{userId}', [EncounterController::class, 'likes']); // GET likes
+Route::get('/encounters/{id}', [EncounterController::class, 'index']); 
+Route::post('/encounters/action', [EncounterController::class, 'action']); 
+Route::get('/likes/{userId}', [EncounterController::class, 'likes']); 
+// routes/api.php
+Route::get('/encounters/liked-me/{userId}', [EncounterController::class, 'likedMe']);

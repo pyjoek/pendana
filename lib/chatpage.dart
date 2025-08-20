@@ -52,7 +52,6 @@ class _ChatPageState extends State<ChatPage> {
 
     if (res.statusCode == 201) {
       _controller.clear();
-      fetchMessages(); // reload after sending
     }
   }
 
