@@ -84,6 +84,7 @@ void dispose() {
                   builder: (_) => ChatPage(
                     userId: widget.userId,
                     receiverId: int.parse(otherUserId),
+                    otherUserName: userName,
                   ),
                 ),
               ).then((_) {

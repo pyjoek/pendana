@@ -46,6 +46,7 @@ class _FindUsersPageState extends State<FindUsersPage> {
                   builder: (_) => ChatPage(
                     userId: widget.currentUserId,
                     receiverId: user['id'],
+                    otherUserName: user['name'],
                   ),
                 ),
               );

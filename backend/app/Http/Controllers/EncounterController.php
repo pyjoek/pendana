@@ -60,9 +60,6 @@ class EncounterController extends Controller
                 return [
                     'id' => $encounter->user->id,
                     'name' => $encounter->user->name,
-                    'gender' => $encounter->user->gender,
-                    'age' => $encounter->user->age,
-                    'photo' => $encounter->user->photo,
                 ];
             });
 

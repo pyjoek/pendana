@@ -26,9 +26,7 @@ class _ProfileState extends State<Profile> {
     setState(() {
       name = prefs.getString("user_name") ?? "Guest User";
       email = prefs.getString("user_email") ?? "guest@example.com";
-      phone = prefs.getString("user_phone") ?? "Not provided"; // if you store phone
-      // you also have access to id and token if needed
-      int? id = prefs.getInt("userId");
+      phone = prefs.getString("user_phone") ?? "Not provided";
     });
   }
 

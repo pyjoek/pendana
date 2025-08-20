@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:pendana/chatpage.dart';
+
 class LikedMePage extends StatefulWidget {
   final int userId; // current logged-in user id
 
@@ -76,7 +78,17 @@ class _LikedMePageState extends State<LikedMePage> {
                         ),
                         trailing: const Icon(Icons.favorite, color: Colors.pink),
                         onTap: () {
-                          // Later: open profile or start chat
+                            // Later: open profile or start chat
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatPage(
+                              userId: widget.userId,
+                              receiverId: user['id'],
+                              otherUserName: user['name'],
+                              ),
+                            ),
+                            );
                           print("Tapped on ${user['name']}");
                         },
                       ),

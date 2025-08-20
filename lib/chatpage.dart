@@ -6,8 +6,9 @@ import 'package:http/http.dart' as http;
 class ChatPage extends StatefulWidget {
   final int userId;      // current logged-in user
   final int receiverId;  // the person you’re chatting with
+  final String otherUserName;
 
-  const ChatPage({super.key, required this.userId, required this.receiverId});
+  const ChatPage({super.key, required this.userId, required this.receiverId, required this.otherUserName});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -17,15 +18,22 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
   List<dynamic> messages = [];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchMessages();
+  Timer? _timer;
 
-    Timer.periodic(Duration(seconds: 1), (timer) {
+@override
+void initState() {
+  super.initState();
+  _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
     fetchMessages();
   });
-  }
+}
+
+@override
+void dispose() {
+  _timer?.cancel();
+  super.dispose();
+}
+
 
   Future<void> fetchMessages() async {
     final res = await http.get(Uri.parse(
@@ -58,7 +66,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Chat with ${widget.receiverId}")),
+      appBar: AppBar(title: Text(widget.otherUserName)),
       body: Column(
         children: [
           Expanded(
