@@ -89,7 +89,6 @@ class _LikedMePageState extends State<LikedMePage> {
                               ),
                             ),
                             );
-                          print("Tapped on ${user['name']}");
                         },
                       ),
                     );

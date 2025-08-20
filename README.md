@@ -1,16 +1,54 @@
-# pendana
+# ❤️ Pendana  
 
-A new Flutter project.
+Pendana is a **dating application built for Tanzanians**, designed to connect people through meaningful encounters. It features user profiles, encounters (like/dislike), chat messaging, and filtering options such as gender and age.  
 
-## Getting Started
+This project is built with **Flutter (frontend)** and **Laravel (backend)**, providing a scalable, modern, and responsive dating platform.  
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Features  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- 🔐 **Authentication**: User registration & login  
+- 👤 **Profiles**: Create & edit user profile with photos  
+- 💘 **Encounters**: Swipe through users (like/dislike system)  
+- 💌 **Messaging**: Real-time chat between matched users  
+- 🎯 **Filters**: Search & filter by age and gender  
+- 📊 **Liked Me**: See users who liked your profile  
+- 🌍 **Tanzania-only focus**: Localized experience for Tanzanian users  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 🛠️ Tech Stack  
+
+**Frontend**  
+- [Flutter](https://flutter.dev) – UI framework for Android/iOS  
+- Dart  
+
+**Backend**  
+- [Laravel](https://laravel.com) – PHP framework for REST APIs  
+- MySQL/PostgreSQL – Database  
+
+**Other**  
+- REST API for communication between app & backend  
+- Card Swiper for encounters  
+
+---
+
+## 📂 Project Structure  
+
+```bash
+pendana/
+│
+├── lib/                # Flutter app source code
+│   ├── screens/        # Screens (Login, Signup, Encounters, Chat, etc.)
+│   ├── widgets/        # Reusable UI components
+│   ├── models/         # Data models
+│   ├── services/       # API calls
+│   └── main.dart       # App entry point
+│
+├── backend/ (Laravel)  # Backend project (separate repo or folder)
+│   ├── app/Http        # Controllers & APIs
+│   ├── database/       # Migrations & seeds
+│   └── routes/api.php  # API endpoints
+│
+└── README.md
