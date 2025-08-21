@@ -13,9 +13,11 @@ class Encounter extends StatefulWidget {
 
 class _EncounterState extends State<Encounter> {
   List<dynamic> users = [];
+  List<dynamic> usergeneral = [];
   final CardSwiperController controller = CardSwiperController();
-  final url = "http://10.0.2.2:8000/api";
-  // final url = "http://127.0.0.1:8000/api";
+  // final url = "http://10.0.2.2:8000/api";
+  final url = "http://127.0.0.1:8000/api";
+
   @override
   void initState() {
     super.initState();
@@ -30,7 +32,9 @@ class _EncounterState extends State<Encounter> {
 
       if (res.statusCode == 200) {
         setState(() {
-          users = jsonDecode(res.body);
+          users = jsonDecode(res.body)[0];
+          usergeneral = jsonDecode(res.body)[1];
+          // print(usergeneral[]);
         });
       } else {
         print("Error fetching users: ${res.statusCode}");
@@ -79,6 +83,7 @@ class _EncounterState extends State<Encounter> {
           if (!hasUsers) return true;
 
           final user = users[prevIndex];
+          final usergen = usergeneral[prevIndex];
           if (direction == CardSwiperDirection.right) {
             sendAction(user["id"], "like");
           } else if (direction == CardSwiperDirection.left) {
@@ -106,6 +111,7 @@ class _EncounterState extends State<Encounter> {
           }
 
           final user = users[index];
+          final usergen = usergeneral[index];
           return Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -140,23 +146,31 @@ class _EncounterState extends State<Encounter> {
                 // User Details
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Column(
+                  child: Row(
                     children: [
-                      Text(
-                        user["name"] ?? "Unknown",
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                      Icon(Icons.close_outlined, color: Colors.red,),
+                      Spacer(),
+                      Column(
+                      children: [
+                        Text(
+                          user["name"] ?? "Unknown",
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "${user["age"] ?? "N/A"} years old",
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(user["bio"] ?? "No bio available"),
-                    ],
+                        const SizedBox(height: 8),
+                        Text(
+                          "${usergen['dob'] ?? "N/A"} years old",
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(usergen["bio"] ?? "No bio available"),
+                      ],
+                    ),
+                      Spacer(),
+                      Icon(Icons.heart_broken, color: Colors.green,),
+                    ]
                   ),
                 ),
               ],

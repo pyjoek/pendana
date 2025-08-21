@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('dob');
             $table->string('purpose');
             $table->string('interests');
+            $table->string('bio');
             $table->timestamps();
         });
     }

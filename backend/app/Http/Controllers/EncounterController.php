@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserGeneral;
 use App\Models\Encounter;
 
 class EncounterController extends Controller
@@ -12,13 +13,21 @@ class EncounterController extends Controller
     public function index($currentUserId)
     {        // Exclude self + people already swiped on
         $swipedIds = Encounter::where('user_id', $currentUserId)->pluck('target_id')->toArray();
+        
 
         $users = User::where('id', '!=', $currentUserId)
             ->whereNotIn('id', $swipedIds)
             ->select('id', 'name')
             ->get();
+        
+        $data = array();
+        foreach($users as $user) {
+            $generals = UserGeneral::where('user_id', $user->id)->first();
+            array_push($data, $generals);
+        }
 
-        return response()->json($users);
+
+        return response()->json([$users, $data]);
     }
 
     // Record like/dislike
