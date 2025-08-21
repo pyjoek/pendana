@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pendana/login.dart';
+import 'package:pendana/auth/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
@@ -14,6 +14,8 @@ class _ProfileState extends State<Profile> {
   String? name;
   String? email;
   String? phone;
+  final url = "http://10.0.2.2:8000/api";
+  // final url = "http://127.0.0.1:8000/api";
 
   @override
   void initState() {
@@ -32,7 +34,7 @@ class _ProfileState extends State<Profile> {
 
   Future<void> logout() async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/logout'),
+      Uri.parse("${url}/logout"),
       headers: {'Content-Type': 'application/json'},
     );
 

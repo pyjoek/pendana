@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pendana/findusers.dart';
+import 'package:pendana/pages/findusers.dart';
 import 'dart:convert';
 import 'chatpage.dart';
 import 'dart:async';
@@ -16,7 +16,8 @@ class ChatListPage extends StatefulWidget {
 
 class _ChatListPageState extends State<ChatListPage> {
   List<dynamic> chats = [];
-
+  final url = "http://10.0.2.2:8000/api";
+  // final url = "http://127.0.0.1:8000/api";
   Timer? _chatTimer;
 
 @override
@@ -37,7 +38,7 @@ void dispose() {
 
   Future<void> fetchChats() async {
   try {
-    final res = await http.get(Uri.parse("http://127.0.0.1:8000/api/chats/${widget.userId}"));
+    final res = await http.get(Uri.parse("${url}/chats/${widget.userId}"));
     if (res.statusCode == 200) {
       final data = jsonDecode(res.body);
 

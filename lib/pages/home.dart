@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pendana/chats.dart';
-import 'package:pendana/encounter.dart';
-import 'package:pendana/likedme.dart';
-import 'package:pendana/profile.dart';
+import 'package:pendana/pages/chats.dart';
+import 'package:pendana/pages/encounter.dart';
+import 'package:pendana/pages/likedme.dart';
+import 'package:pendana/pages/profile.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.userId});

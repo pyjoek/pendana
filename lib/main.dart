@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pendana/login.dart';
-import 'package:pendana/signup.dart';
+import 'package:pendana/auth/login.dart';
+import 'package:pendana/auth/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 

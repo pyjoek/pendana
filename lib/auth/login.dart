@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:pendana/home.dart';
+import 'package:pendana/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pendana/signup.dart';
+import 'package:pendana/auth/signup.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -37,8 +37,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> loginUser() async {
   final emailText = email.text.trim();
   final passText = password.text;
-  // final apiBase = 'http://10.0.2.2:8000/api';
-  final apiBase = 'http://127.0.0.1:8000/api';
+  final apiBase = 'http://10.0.2.2:8000/api';
+  // final apiBase = 'http://127.0.0.1:8000/api';
 
   if (emailText.isEmpty || passText.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(

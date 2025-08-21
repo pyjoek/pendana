@@ -14,7 +14,8 @@ class Encounter extends StatefulWidget {
 class _EncounterState extends State<Encounter> {
   List<dynamic> users = [];
   final CardSwiperController controller = CardSwiperController();
-
+  final url = "http://10.0.2.2:8000/api";
+  // final url = "http://127.0.0.1:8000/api";
   @override
   void initState() {
     super.initState();
@@ -24,7 +25,7 @@ class _EncounterState extends State<Encounter> {
   Future<void> fetchUsers() async {
     try {
       final res = await http.get(
-        Uri.parse("http://127.0.0.1:8000/api/encounters/${widget.currentUserId}"),
+        Uri.parse("${url}/encounters/${widget.currentUserId}"),
       );
 
       if (res.statusCode == 200) {
@@ -40,11 +41,11 @@ class _EncounterState extends State<Encounter> {
   }
 
   Future<void> sendAction(int targetId, String action) async {
-    final url = Uri.parse("http://127.0.0.1:8000/api/encounters/action");
+    final actionUrl = Uri.parse("${url}/encounters/action");
 
     try {
       final response = await http.post(
-        url,
+        actionUrl,
         body: {
           'user_id': widget.currentUserId.toString(),
           'target_id': targetId.toString(),

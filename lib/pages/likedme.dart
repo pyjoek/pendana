@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:pendana/chatpage.dart';
+import 'package:pendana/pages/chatpage.dart';
 
 class LikedMePage extends StatefulWidget {
   final int userId; // current logged-in user id
@@ -16,6 +16,8 @@ class LikedMePage extends StatefulWidget {
 class _LikedMePageState extends State<LikedMePage> {
   List<dynamic> usersLikedMe = [];
   bool isLoading = true;
+  final url = "http://10.0.2.2:8000/api";
+  // final url = "http://127.0.0.1:8000/api";
 
   @override
   void initState() {
@@ -26,7 +28,7 @@ class _LikedMePageState extends State<LikedMePage> {
   Future<void> fetchUsersLikedMe() async {
     try {
       final res = await http.get(
-        Uri.parse("http://127.0.0.1:8000/api/encounters/liked-me/${widget.userId}"),
+        Uri.parse("${url}/encounters/liked-me/${widget.userId}"),
       );
 
       if (res.statusCode == 200) {

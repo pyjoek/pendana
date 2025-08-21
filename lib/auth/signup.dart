@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pendana/login.dart';
-import 'package:pendana/otp.dart';
+import 'package:pendana/auth/login.dart';
+import 'package:pendana/auth/otp.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});

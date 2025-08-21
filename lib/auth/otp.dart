@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:pendana/general.dart';
+import 'package:pendana/auth/general.dart';
 
 class OtpPage extends StatefulWidget {
   final String email; // email passed from signup page

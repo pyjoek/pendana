@@ -13,6 +13,8 @@ class FindUsersPage extends StatefulWidget {
 
 class _FindUsersPageState extends State<FindUsersPage> {
   List<dynamic> users = [];
+  final url = "http://10.0.2.2:8000/api";
+  // final url = "http://127.0.0.1:8000/api";
 
   @override
   void initState() {
@@ -21,7 +23,7 @@ class _FindUsersPageState extends State<FindUsersPage> {
   }
 
   Future<void> fetchUsers() async {
-    final res = await http.get(Uri.parse("http://127.0.0.1:8000/api/users/${widget.currentUserId}"));
+    final res = await http.get(Uri.parse("${url}/users/${widget.currentUserId}"));
     if (res.statusCode == 200) {
       setState(() {
         users = jsonDecode(res.body);
