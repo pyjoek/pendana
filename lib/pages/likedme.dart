@@ -16,8 +16,8 @@ class LikedMePage extends StatefulWidget {
 class _LikedMePageState extends State<LikedMePage> {
   List<dynamic> usersLikedMe = [];
   bool isLoading = true;
-  final url = "http://10.0.2.2:8000/api";
-  // final url = "http://127.0.0.1:8000/api";
+  // final url = "http://10.0.2.2:8000/api";
+  final url = "http://127.0.0.1:8000/api";
 
   @override
   void initState() {

@@ -20,8 +20,8 @@ class _SignUpState extends State<SignUp> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   String gender = "Male"; // default
-  final addr = "10.0.2.2:8000/api";
-  // final addr = "127.0.0.1:8000/api";
+  // final addr = "10.0.2.2:8000/api";
+  final addr = "127.0.0.1:8000/api";
 
   bool _obscureText = true;
   bool _loading = false;

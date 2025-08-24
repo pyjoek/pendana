@@ -17,8 +17,8 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
   List<dynamic> messages = [];
-  final url = "http://10.0.2.2:8000/api";
-  // final url = "http://127.0.0.1:8000/api";
+  // final url = "http://10.0.2.2:8000/api";
+  final url = "http://127.0.0.1:8000/api";
 
   Timer? _timer;
 

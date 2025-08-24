@@ -16,8 +16,8 @@ class ChatListPage extends StatefulWidget {
 
 class _ChatListPageState extends State<ChatListPage> {
   List<dynamic> chats = [];
-  final url = "http://10.0.2.2:8000/api";
-  // final url = "http://127.0.0.1:8000/api";
+  // final url = "http://10.0.2.2:8000/api";
+  final url = "http://127.0.0.1:8000/api";
   Timer? _chatTimer;
 
 @override
