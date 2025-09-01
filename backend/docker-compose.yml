@@ -1,0 +1,31 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: RootPass123
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_DATABASE: "pendana"
+      MYSQL_USER: pendanausers
+      MYSQL_PASSWORD: Penda123
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  api:
+    build: ./backend
+    restart: always
+    volumes:
+      - ./backend
+    working_dir: /backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      LARAVEL_ENV: development
+      DATABASE_URL: mysql://pendanausers:Penda123@db/pendana
+
+volumes:
+  db_data:
