@@ -13,7 +13,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   String? name;
   String? email;
-  String? phone;
   // final url = "http://10.0.2.2:8000/api";
   final url = "http://127.0.0.1:8000/api";
 
@@ -28,7 +27,6 @@ class _ProfileState extends State<Profile> {
     setState(() {
       name = prefs.getString("user_name") ?? "Guest User";
       email = prefs.getString("user_email") ?? "guest@example.com";
-      phone = prefs.getString("user_phone") ?? "Not provided";
     });
   }
 
@@ -81,6 +79,26 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 20),
 
               // User Info
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      infoRow("Name", name ?? ""),
+                      const Divider(),
+                      infoRow("Email", email ?? ""),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
               Card(
                 elevation: 2,
                 shape: RoundedRectangleBorder(

@@ -1,31 +1,29 @@
+version: "3.8"
 services:
+  backend:
+    build: .
+    container_name: pendana_backend
+    restart: always
+    ports:
+      - "8000:8000"   # Expose backend on localhost:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
   db:
     image: mysql:8.0
+    container_name: pendana_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: RootPass123
-      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
-      MYSQL_DATABASE: "pendana"
-      MYSQL_USER: pendanausers
-      MYSQL_PASSWORD: Penda123
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pendana
+      MYSQL_USER: pendana_user
+      MYSQL_PASSWORD: secret
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-
-  api:
-    build: ./backend
-    restart: always
-    volumes:
-      - ./backend
-    working_dir: /backend
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      LARAVEL_ENV: development
-      DATABASE_URL: mysql://pendanausers:Penda123@db/pendana
 
 volumes:
   db_data:
