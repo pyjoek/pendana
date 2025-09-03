@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pendana/pages/home.dart';
+import 'package:image_picker/image_picker.dart';
 
 class General extends StatefulWidget {
   final userId; 
@@ -16,6 +18,7 @@ class General extends StatefulWidget {
 class _GeneralState extends State<General> {
   final PageController _pageController = PageController();
   final TextEditingController likesController = TextEditingController();
+  final TextEditingController bio = TextEditingController();
 
   List<String> availableLikes = [
     "Music",
@@ -34,6 +37,20 @@ class _GeneralState extends State<General> {
   // final addr = "10.0.2.2:8000/api";
   final addr = "127.0.0.1:8000/api";
   bool _loading = false;
+  File? _profileImage;
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    
+    // Choose image from gallery
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _profileImage = File(image.path); 
+      });
+    }
+  }
 
   void validateAndNext() {
     if (selectedDate == null) {
@@ -256,6 +273,75 @@ class _GeneralState extends State<General> {
               ],
             ),
           ),
+
+          // adding profile pic and bio
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Profile Picture Section
+                    Center(
+                      child: CircleAvatar(
+                        radius: 80, // Size of the profile picture
+                        backgroundImage: _profileImage != null
+                            ? FileImage(_profileImage!) as ImageProvider
+                            : const AssetImage('assets/default_profile.png'),
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt, color: Colors.white), // Icon to change profile picture
+                          onPressed: () {
+                            _pickImage(); // Call the image picker function
+                          },
+                        ),
+                      ),
+                    ),
+                const SizedBox(height: 50),
+
+                // Bio Section
+                Center(
+                  child: Text(
+                    "Write Your Bio",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(color: Colors.pink),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                    controller: bio,
+                  decoration: InputDecoration(
+                    hintText: "Tell us about yourself...",
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.all(10),
+                  ),
+                  maxLines: 5, // Adjust the number of lines if needed
+                  onChanged: (value) {
+                    // Store the bio value if necessary
+                  },
+                ),
+                const SizedBox(height: 20),
+
+                const Spacer(),
+
+                // Navigation buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                        onPressed: prevPage,
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade300),
+                        child: const Text("Previous")),
+                    ElevatedButton(
+                        onPressed: nextPage,
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
+                        child: const Text("Next")),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
 
           // Step 4: Likes
           Padding(
