@@ -90,7 +90,6 @@ class _EncounterState extends State<Encounter> {
           if (!hasUsers) return true;
 
           final user = users[prevIndex];
-          final usergen = usergeneral[prevIndex];
           if (direction == CardSwiperDirection.right) {
             sendAction(user["id"], "like");
           } else if (direction == CardSwiperDirection.left) {
