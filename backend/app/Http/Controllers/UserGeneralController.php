@@ -28,22 +28,53 @@ class UserGeneralController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'dob' => 'required|date',
+            'purpose' => 'required|string',
+            'bio' => 'nullable|string',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png',
+        ]);
 
-        $data = $request->all();
+        $path = null;
+        if ($request->hasFile('profile_picture')) {
+            $path = $request->file('profile_picture')->store('profiles', 'public');
+        }
 
-            // $data['user_id'] = auth()->id(); // safer than $request->user()
-
-            // Convert array to JSON before saving if column type = string/text
-            // return response()->json(['debug' => "here"]);
-            $data['interests'] = json_encode($data['interests']);
-
-        $userGeneral = UserGeneral::create($data);
+        $userGeneral = UserGeneral::create([
+            'user_id' => $request->user_id,
+            'dob' => $request->dob,
+            'purpose' => $request->purpose,
+            'interests' => json_encode($request->interests),
+            'bio' => $request->bio,
+            'profile_picture' => $path,
+        ]);
 
         return response()->json([
             'message' => 'User general information stored successfully',
             'data' => $userGeneral
         ], 201);
     }
+
+
+    // public function storedy(Request $request)
+    // {
+
+    //     $data = $request->all();
+
+    //         // $data['user_id'] = auth()->id(); // safer than $request->user()
+
+    //         // Convert array to JSON before saving if column type = string/text
+    //         // return response()->json(['debug' => "here"]);
+    //         $data['interests'] = json_encode($data['interests']);
+
+    //     $userGeneral = UserGeneral::create($data);
+
+    //     return response()->json([
+    //         'message' => 'User general information stored successfully',
+    //         'data' => $userGeneral
+    //     ], 201);
+    // }
 
 
     /**

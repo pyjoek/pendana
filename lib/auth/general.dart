@@ -94,69 +94,138 @@ class _GeneralState extends State<General> {
     );
   }
 
-  Future<void> submitData(age) async {
-    if (purpose.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select gender and purpose")),
-      );
-      return;
-    }
+  // Future<void> submitData(age) async {
+  //   if (purpose.isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text("Please select gender and purpose")),
+  //     );
+  //     return;
+  //   }
 
-    final payload = {
-      "user_id": widget.userId,
-      "dob": selectedDate?.toIso8601String(), // backend expects a date
-      "purpose": purpose,
-      "interests": selectedLikes.toList(), // backend must allow array
-    };
-    print(payload);
+  //   final payload = {
+  //     "user_id": widget.userId,
+  //     "dob": selectedDate?.toIso8601String(), // backend expects a date
+  //     "purpose": purpose,
+  //     "interests": selectedLikes.toList(), // backend must allow array
+  //     "bio": bio.text,
+  //   };
 
-    setState(() {
-      _loading = true;
-    });
+  //   setState(() {
+  //     _loading = true;
+  //   });
 
-    try {
-      // Combine selected likes + custom input
-      List<String> interests = selectedLikes.toList();
-      if (likesController.text.isNotEmpty) {
-        interests.add(likesController.text);
-      }
+  //   try {
+  //     // Combine selected likes + custom input
+  //     List<String> interests = selectedLikes.toList();
+  //     if (likesController.text.isNotEmpty) {
+  //       interests.add(likesController.text);
+  //     }
 
-      final response = await http.post(
-        Uri.parse("http://$addr/user_general"), // add /api if your Laravel uses it
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(payload),
-      );
+  //     final response = await http.post(
+  //       Uri.parse("http://$addr/user_general"), // add /api if your Laravel uses it
+  //       headers: {"Content-Type": "application/json"},
+  //       body: jsonEncode(payload),
+  //     );
 
-      if (response.statusCode == 201) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => Home(userId: widget.userId)),
-          (Route<dynamic> route) => false, // removes all previous routes
-        );
-      } else {
-          try {
-            final data = jsonDecode(response.body);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Error: ${data['message']}")),
-            );
-          } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Unexpected error: ${response.body}")),
-            );
-          }
-        }
-    } 
-    catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Exception: $e")),
-      );
-    }
+  //     if (response.statusCode == 201) {
+  //       Navigator.pushAndRemoveUntil(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => Home(userId: widget.userId)),
+  //         (Route<dynamic> route) => false, // removes all previous routes
+  //       );
+  //     } else {
+  //         try {
+  //           final data = jsonDecode(response.body);
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(content: Text("Error: ${data['message']}")),
+  //           );
+  //         } catch (e) {
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(content: Text("Unexpected error: ${response.body}")),
+  //           );
+  //         }
+  //       }
+  //   } 
+  //   catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Exception: $e")),
+  //     );
+  //   }
 
 
-    setState(() {
-      _loading = false;
-    });
+  //   setState(() {
+  //     _loading = false;
+  //   });
+  // }
+
+  Future<void> submitData(int age) async {
+  if (purpose.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Please select gender and purpose")),
+    );
+    return;
   }
+
+  setState(() {
+    _loading = true;
+  });
+
+  try {
+    // Combine selected likes + custom input
+    List<String> interests = selectedLikes.toList();
+    if (likesController.text.isNotEmpty) {
+      interests.add(likesController.text);
+    }
+
+    var uri = Uri.parse("http://$addr/user_general");
+
+    // Use multipart request so we can send image + text together
+    var request = http.MultipartRequest("POST", uri);
+
+    request.fields['user_id'] = widget.userId.toString();
+    request.fields['dob'] = selectedDate?.toIso8601String() ?? "";
+    request.fields['purpose'] = purpose;
+    request.fields['interests'] = jsonEncode(interests);
+    request.fields['bio'] = bio.text;
+
+    if (_profileImage != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath("profile_picture", _profileImage!.path),
+      );
+    }
+
+    var response = await request.send();
+    var responseBody = await response.stream.bytesToString();
+
+    if (response.statusCode == 201) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Home(userId: widget.userId)),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      try {
+        final data = jsonDecode(responseBody);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ${data['message']}")),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Unexpected error: $responseBody")),
+        );
+      }
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Exception: $e")),
+    );
+  }
+
+  setState(() {
+    _loading = false;
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {

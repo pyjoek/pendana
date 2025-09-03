@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('dob');
             $table->string('purpose');
-            $table->string('interests');
-            $table->string('bio');
+            $table->json('interests');
+            $table->text('bio')->nullable();
+            $table->string('profile_picture')->nullable();
             $table->timestamps();
         });
     }
