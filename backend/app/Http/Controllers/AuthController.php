@@ -88,6 +88,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
+        $userGeneral = UserGeneral::where('user_id', $user->id)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
@@ -98,7 +99,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'user' => $user,
-            'userId' => $user->id
+            'userId' => $user->id,
+            'userGeneral' => $userGeneral
         ]);
     }
 

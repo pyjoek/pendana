@@ -139,7 +139,7 @@ class _EncounterState extends State<Encounter> {
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                     child: user["photo"] != null
                         ? Image.network(
-                            user["photo"],
+                            user["profile_picture"],
                             fit: BoxFit.cover,
                             width: double.infinity,
                           )

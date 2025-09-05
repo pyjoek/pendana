@@ -33,7 +33,7 @@ class UserGeneralController extends Controller
             'dob' => 'required|date',
             'purpose' => 'required|string',
             'bio' => 'nullable|string',
-            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png',
+            'profile_picture' => 'image|mimes:jpg,jpeg,png',
         ]);
 
         $path = null;
@@ -55,27 +55,6 @@ class UserGeneralController extends Controller
             'data' => $userGeneral
         ], 201);
     }
-
-
-    // public function storedy(Request $request)
-    // {
-
-    //     $data = $request->all();
-
-    //         // $data['user_id'] = auth()->id(); // safer than $request->user()
-
-    //         // Convert array to JSON before saving if column type = string/text
-    //         // return response()->json(['debug' => "here"]);
-    //         $data['interests'] = json_encode($data['interests']);
-
-    //     $userGeneral = UserGeneral::create($data);
-
-    //     return response()->json([
-    //         'message' => 'User general information stored successfully',
-    //         'data' => $userGeneral
-    //     ], 201);
-    // }
-
 
     /**
      * Display the specified resource.

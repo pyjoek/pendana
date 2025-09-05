@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pendana/auth/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -13,6 +15,8 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   String? name;
   String? email;
+  File? _profileImage;
+  String? gender;
   // final url = "http://10.0.2.2:8000/api";
   final url = "http://127.0.0.1:8000/api";
 
@@ -27,7 +31,22 @@ class _ProfileState extends State<Profile> {
     setState(() {
       name = prefs.getString("user_name") ?? "Guest User";
       email = prefs.getString("user_email") ?? "guest@example.com";
+      _profileImage = File(prefs.getString("user_profile_picture") ?? "");
+      gender = prefs.getString('gender');
     });
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    
+    // Choose image from gallery
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _profileImage = File(image.path); 
+      });
+    }
   }
 
   Future<void> logout() async {
@@ -54,9 +73,9 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    final avatarLetter = name != null && name!.isNotEmpty
-        ? name![0].toUpperCase()
-        : "U";
+    // final avatarLetter = name != null && name!.isNotEmpty
+    //     ? name![0].toUpperCase()
+    //     : "U";
 
     return Scaffold(
       appBar: AppBar(
@@ -70,12 +89,23 @@ class _ProfileState extends State<Profile> {
             children: [
               // Avatar
               CircleAvatar(
-                radius: 50,
-                child: Text(
-                  avatarLetter,
-                  style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                radius: 80,
+                backgroundImage: _profileImage != null
+                    ? FileImage(_profileImage!)
+                    : AssetImage(
+                        gender == "male"
+                            ? "assets/male.jpg"
+                            : "assets/female.png",
+                      ) as ImageProvider,
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: IconButton(
+                    icon: const Icon(Icons.camera_alt, color: Colors.white),
+                    onPressed: _pickImage,
+                  ),
                 ),
               ),
+
               const SizedBox(height: 20),
 
               // User Info

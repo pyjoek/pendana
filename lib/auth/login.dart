@@ -68,6 +68,9 @@ class _LoginPageState extends State<LoginPage> {
       await prefs.setString('access_token', accessToken);
       await prefs.setString('user_email', user['email'] ?? '');
       await prefs.setString('user_name', user['name'] ?? '');
+      await prefs.setString('gender', user['gender'] ?? '');
+      await prefs.setString('user_phone', user['phone'] ?? '');
+      await prefs.setString('user_profile_picture', user['profile_picture'] ?? '');
       await prefs.setInt('userId', userId); // make sure backend returns id
 
       if (!mounted) return;
