@@ -32,7 +32,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final password = TextEditingController();
   bool _obscureText = true;
   bool _loading = false;
-  bool reset = false;
+  bool reset = true;
 
   Future<void> loginUser() async {
   final emailText = email.text.trim();
@@ -112,118 +112,143 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           child: Center(
             child: Column(
               children: [
-                if(!reset) ...[
-                  SizedBox(height: height * 0.15),
-                Text(
-                  "PENDANA",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 44),
-                ),
-                Container(
-                  width: width * 0.85,
-                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        offset: Offset(3, 8),
-                        blurRadius: 10,
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Reset Password",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 28,
-                          color: Colors.pink,
-                        ),
-                      ),
-                      SizedBox(height: height * 0.04),
-
-                      // Email Field
-                      SizedBox(
-                        width: width * 0.7,
-                        child: TextFormField(
-                          controller: email,
-                          decoration: InputDecoration(
-                            hintText: 'Your Email',
-                            filled: true,
-                            fillColor: background,
-                            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.04),
-
-                      // Password Field
-                      SizedBox(
-                        width: width * 0.7,
-                        child: TextFormField(
-                          controller: password,
-                          obscureText: _obscureText,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscureText ? Icons.visibility_off : Icons.visibility,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
-                            ),
-                            hintText: 'Password',
-                            filled: true,
-                            fillColor: background,
-                            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.06),
-
-                      InkWell(
-                        onTap: _loading ? null : loginUser,
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                            color: Colors.pink,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Center(
-                            child: _loading
-                                ? CircularProgressIndicator(color: Colors.white)
-                                : Text(
-                                    "Check Details",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.03),
-                ],
-
                 
+                  SizedBox(height: height * 0.15),
+                  Text(
+                    "PENDANA",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 44),
+                  ),
+                  Container(
+                    width: width * 0.85,
+                    padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          offset: Offset(3, 8),
+                          blurRadius: 10,
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Reset Password",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 28,
+                            color: Colors.pink,
+                          ),
+                        ),
+                        SizedBox(height: height * 0.04),
+
+                        if(reset == false) ...[
+                        // Email Field
+                        SizedBox(
+                          width: width * 0.7,
+                          child: TextFormField(
+                            controller: email,
+                            decoration: InputDecoration(
+                              hintText: 'Your Email',
+                              filled: true,
+                              fillColor: background,
+                              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.04),
+
+                        // Password Field
+                        SizedBox(
+                          width: width * 0.7,
+                          child: TextFormField(
+                            controller: password,
+                            obscureText: _obscureText,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                              ),
+                              hintText: 'Password',
+                              filled: true,
+                              fillColor: background,
+                              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.06),
+
+                        InkWell(
+                          onTap: _loading ? null : loginUser,
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            decoration: BoxDecoration(
+                              color: Colors.pink,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Center(
+                              child: _loading
+                                  ? CircularProgressIndicator(color: Colors.white)
+                                  : Text(
+                                      "Check Details",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.03),
+                      ],
+
+                        if (reset) ...[
+                          InkWell(
+                            onTap: _loading ? null : loginUser,
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                color: Colors.pink,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Center(
+                                child: _loading
+                                    ? CircularProgressIndicator(color: Colors.white)
+                                    : Text(
+                                        "Sign In",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ]
+                      ]
+                    ),
+                  ),
+                ],
+            ), 
+          ),
         ),
-      ),
-    ]
-    )
-    )
-    )
-    )
+      )
     );
   }
 }
