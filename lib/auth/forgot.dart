@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pendana/auth/forgot.dart';
 import 'dart:convert';
 import 'package:pendana/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pendana/auth/signup.dart';
 
-class Login extends StatelessWidget {
-  const Login({super.key});
+class ForgotPassword extends StatelessWidget {
+  const ForgotPassword({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: ForgotPasswordPage(),
     );
   }
 }
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   double width = 0;
   double height = 0;
   final Color background = const Color(0xFFFFF9F6);
@@ -34,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   final password = TextEditingController();
   bool _obscureText = true;
   bool _loading = false;
+  bool reset = false;
 
   Future<void> loginUser() async {
   final emailText = email.text.trim();
@@ -48,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
     return;
   }
   
-
   setState(() => _loading = true);
 
   try {
@@ -114,7 +112,8 @@ class _LoginPageState extends State<LoginPage> {
           child: Center(
             child: Column(
               children: [
-                SizedBox(height: height * 0.15),
+                if(!reset) ...[
+                  SizedBox(height: height * 0.15),
                 Text(
                   "PENDANA",
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 44),
@@ -136,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       Text(
-                        "Log In",
+                        "Reset Password",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 28,
@@ -193,29 +192,6 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: height * 0.06),
 
                       InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ForgotPassword(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          child: Center(
-                            child: Text(
-                              "Forgot Password?!",
-                              style: TextStyle(
-                                  color: Colors.pink,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkWell(
                         onTap: _loading ? null : loginUser,
                         child: Container(
                           width: double.infinity,
@@ -228,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: _loading
                                 ? CircularProgressIndicator(color: Colors.white)
                                 : Text(
-                                    "Sign In",
+                                    "Check Details",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
@@ -237,37 +213,17 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SignUp(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          child: Center(
-                            child: Text(
-                              "Create New Account!",
-                              style: TextStyle(
-                                  color: Colors.pink,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
+                      SizedBox(height: height * 0.03),
+                ],
+
+                
         ),
       ),
+    ]
+    )
+    )
+    )
+    )
     );
   }
 }

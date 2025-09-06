@@ -27,7 +27,7 @@ class UserGeneralController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {  
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'dob' => 'required|date',
@@ -35,11 +35,15 @@ class UserGeneralController extends Controller
             'bio' => 'nullable|string',
             'profile_picture' => 'image|mimes:jpg,jpeg,png',
         ]);
-
+        
         $path = null;
         if ($request->hasFile('profile_picture')) {
             $path = $request->file('profile_picture')->store('profiles', 'public');
         }
+
+        // return response()->json([
+        //     'data' => $path
+        // ], 201);
 
         $userGeneral = UserGeneral::create([
             'user_id' => $request->user_id,

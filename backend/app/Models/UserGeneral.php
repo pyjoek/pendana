@@ -9,7 +9,7 @@ class UserGeneral extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'dob', 'purpose', 'interests', 'bio'];
+    protected $fillable = ['user_id', 'dob', 'purpose', 'interests', 'profile_picture', 'bio'];
 
     public function user()
     {
