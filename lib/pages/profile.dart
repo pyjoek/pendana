@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pendana/auth/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -13,8 +14,10 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   String? name;
   String? email;
-  String profileImage = "profiles/logo.png";
+  String? profileImage;
   String? gender;
+  List<dynamic> users = [];
+  List<dynamic> usergeneral = [];
   // final url = "http://10.0.2.2:8000/api";
   final url = "http://127.0.0.1:8000/api";
 
@@ -22,16 +25,29 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     loadUserData();
+    print(profileImage);
   }
 
   Future<void> loadUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      name = prefs.getString("user_name") ?? "Guest User";
-      email = prefs.getString("user_email") ?? "guest@example.com";
-      profileImage = prefs.getString("user_profile_picture") ?? "";
-      gender = prefs.getString('gender');
-    });
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // setState(() {
+    //   name = prefs.getString("user_name") ?? "Guest User";
+    //   email = prefs.getString("user_email") ?? "guest@example.com";
+    //   profileImage = prefs.getString("user_profile_picture") ?? "";
+    //   gender = prefs.getString('gender');
+    // });
+    final response = await http.get(
+      Uri.parse("$url/profile")
+    );
+
+    if (response.statusCode == 200) {
+        setState(() {
+          users = jsonDecode(response.body)[0];
+          usergeneral = jsonDecode(response.body)[1];
+        });
+      } else {
+        print("Error fetching users: ${response.statusCode}");
+      }
   }
 
   Future<void> logout() async {

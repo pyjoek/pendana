@@ -136,9 +136,11 @@ class _EncounterState extends State<Encounter> {
                 Expanded(
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                    child: user["photo"] != null
+                    child: usergen["photo"] != null
+                      // ? NetworkImage('http://127.0.0.1:8000/storage/${usergen["profile_picture"]}')
                         ? Image.network(
-                            user["profile_picture"],
+                            // usergen["profile_picture"],
+                            'http://127.0.0.1:8000/storage/${usergen["profile_picture"]}',
                             fit: BoxFit.cover,
                             width: double.infinity,
                           )
