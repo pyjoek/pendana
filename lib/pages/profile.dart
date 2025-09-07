@@ -15,6 +15,8 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   // final url = "http://10.0.2.2:8000/api";
   final url = "http://127.0.0.1:8000/api";
+  Map<String, dynamic> users = {};
+  Map<String, dynamic> usergeneral = {};
 
   @override
   void initState() {
@@ -29,9 +31,8 @@ class _ProfileState extends State<Profile> {
 
     if (response.statusCode == 200) {
         setState(() {
-          List<dynamic> users = json.decode(response.body)[0];
-          print((users));
-          List usergeneral = json.decode(response.body)[1];
+          users = json.decode(response.body)[0];
+          usergeneral = json.decode(response.body)[1];
         });
       } else {
         print("Error fetching users: ${response.statusCode}");
@@ -85,7 +86,7 @@ class _ProfileState extends State<Profile> {
               // ),
               CircleAvatar(
                 radius: 80,
-                backgroundImage: NetworkImage('http://127.0.0.1:8000/storage/1'),
+                backgroundImage: NetworkImage("http://127.0.0.1:8000/storage/${usergeneral['profile_picture']}"),
                 // backgroundImage: AssetImage("assets/male.jpg"),
               ),
 
@@ -102,35 +103,21 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // infoRow("Name", name ?? ""),
+                      infoRow("Name", users['name'] ?? ""),
                       const Divider(),
-                      // infoRow("Email", email ?? ""),
+                      infoRow("Email", users['email'] ?? ""),
                       const Divider(),
-                      // infoRow("Bio", bio ?? ""),
+                      infoRow("Bio", usergeneral['bio'] ?? ""),
+                      const Divider(),
+                      infoRow("Gender", users['gender'] ?? ""),
+                      const Divider(),
+                      infoRow("Age", usergeneral['dob'] ?? ""),
                     ],
                   ),
                 ),
               ),
 
               const SizedBox(height: 10),
-
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // infoRow("Gender", gender ?? ""),
-                      const Divider(),
-                      // infoRow("Age", age ?? ""),
-                    ],
-                  ),
-                ),
-              ),
 
               const SizedBox(height: 30),
 
