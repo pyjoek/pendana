@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\UserGeneral;
 use App\Models\UserOtp;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -86,14 +87,14 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
+        
         $user = User::where('email', $request->email)->first();
         $userGeneral = UserGeneral::where('user_id', $user->id)->first();
-
+        
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
-
+        
         $token = $user->createToken('pendana_token')->plainTextToken;
 
         return response()->json([

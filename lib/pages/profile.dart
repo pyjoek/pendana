@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pendana/auth/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -14,7 +13,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   String? name;
   String? email;
-  String? profileImage;
+  String profileImage = "profiles/logo.png";
   String? gender;
   // final url = "http://10.0.2.2:8000/api";
   final url = "http://127.0.0.1:8000/api";
@@ -87,6 +86,7 @@ class _ProfileState extends State<Profile> {
               CircleAvatar(
                 radius: 80,
                 backgroundImage: NetworkImage('http://127.0.0.1:8000/storage/$profileImage'),
+                // backgroundImage: AssetImage("assets/male.jpg"),
               ),
 
               const SizedBox(height: 20),
@@ -105,6 +105,8 @@ class _ProfileState extends State<Profile> {
                       infoRow("Name", name ?? ""),
                       const Divider(),
                       infoRow("Email", email ?? ""),
+                      const Divider(),
+                      // infoRow("Bio", bio ?? ""),
                     ],
                   ),
                 ),
@@ -122,9 +124,9 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      infoRow("Name", name ?? ""),
+                      infoRow("Gender", gender ?? ""),
                       const Divider(),
-                      infoRow("Email", email ?? ""),
+                      // infoRow("Age", age ?? ""),
                     ],
                   ),
                 ),
