@@ -22,6 +22,7 @@ class _EncounterState extends State<Encounter> {
   void initState() {
     super.initState();
     fetchUsers();
+    print(usergeneral);
   }
 
   Future<void> fetchUsers() async {
@@ -136,7 +137,7 @@ class _EncounterState extends State<Encounter> {
                 Expanded(
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                    child: usergen["photo"] != null
+                    child: usergen["profile_picture"] != null
                       // ? NetworkImage('http://127.0.0.1:8000/storage/${usergen["profile_picture"]}')
                         ? Image.network(
                             // usergen["profile_picture"],
