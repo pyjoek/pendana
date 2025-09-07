@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserGeneral;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserGeneralController extends Controller
@@ -10,9 +11,14 @@ class UserGeneralController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
+    public function profile($id)
+    {        
+        $user = User::where('id', $id)->first();
+        $userGeneral = UserGeneral::where('user_id', $id)->first(); 
+
+        return response()->json([
+            $user, $userGeneral
+        ]);
     }
 
     /**

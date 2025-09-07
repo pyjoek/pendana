@@ -44,6 +44,7 @@ Route::get('/messages/{userId}/{otherUserId}', [MessageController::class, 'messa
 
 // routes/api.php
 Route::get('/users/{id}', [AuthController::class, 'listOtherUsers']);
+Route::get('/profile/{id}', [UserGeneralController::class, 'profile']);
 
 Route::get('/encounters/{id}', [EncounterController::class, 'index']); 
 Route::post('/encounters/action', [EncounterController::class, 'action']); 

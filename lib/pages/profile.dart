@@ -5,19 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  const Profile({super.key, required this.userId});
+  final int userId;
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  String? name;
-  String? email;
-  String? profileImage;
-  String? gender;
-  List<dynamic> users = [];
-  List<dynamic> usergeneral = [];
   // final url = "http://10.0.2.2:8000/api";
   final url = "http://127.0.0.1:8000/api";
 
@@ -25,25 +20,18 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     loadUserData();
-    print(profileImage);
   }
 
   Future<void> loadUserData() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // setState(() {
-    //   name = prefs.getString("user_name") ?? "Guest User";
-    //   email = prefs.getString("user_email") ?? "guest@example.com";
-    //   profileImage = prefs.getString("user_profile_picture") ?? "";
-    //   gender = prefs.getString('gender');
-    // });
     final response = await http.get(
-      Uri.parse("$url/profile")
+      Uri.parse("$url/profile/${widget.userId}")
     );
 
     if (response.statusCode == 200) {
         setState(() {
-          users = jsonDecode(response.body)[0];
-          usergeneral = jsonDecode(response.body)[1];
+          List<dynamic> users = json.decode(response.body)[0];
+          print((users));
+          List usergeneral = json.decode(response.body)[1];
         });
       } else {
         print("Error fetching users: ${response.statusCode}");
@@ -74,13 +62,9 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    // final avatarLetter = name != null && name!.isNotEmpty
-    //     ? name![0].toUpperCase()
-    //     : "U";
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: Text("Profile"),
         centerTitle: true,
         ),
       body: SingleChildScrollView(
@@ -101,7 +85,7 @@ class _ProfileState extends State<Profile> {
               // ),
               CircleAvatar(
                 radius: 80,
-                backgroundImage: NetworkImage('http://127.0.0.1:8000/storage/$profileImage'),
+                backgroundImage: NetworkImage('http://127.0.0.1:8000/storage/1'),
                 // backgroundImage: AssetImage("assets/male.jpg"),
               ),
 
@@ -118,9 +102,9 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      infoRow("Name", name ?? ""),
+                      // infoRow("Name", name ?? ""),
                       const Divider(),
-                      infoRow("Email", email ?? ""),
+                      // infoRow("Email", email ?? ""),
                       const Divider(),
                       // infoRow("Bio", bio ?? ""),
                     ],
@@ -140,7 +124,7 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      infoRow("Gender", gender ?? ""),
+                      // infoRow("Gender", gender ?? ""),
                       const Divider(),
                       // infoRow("Age", age ?? ""),
                     ],

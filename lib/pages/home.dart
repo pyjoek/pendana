@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
       Encounter(currentUserId: widget.userId,), // 👀 Encounters
       LikedMePage(userId: widget.userId),      // ❤️ Likes
       ChatListPage(userId: widget.userId),                             // 💬 Chats
-      const Profile(),                              // ⚙️ Settings/Profile
+      Profile(userId: widget.userId),                              // ⚙️ Settings/Profile
     ];
   }
 
