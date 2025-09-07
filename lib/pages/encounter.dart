@@ -34,7 +34,6 @@ class _EncounterState extends State<Encounter> {
         setState(() {
           users = jsonDecode(res.body)[0];
           usergeneral = jsonDecode(res.body)[1];
-          // print(usergeneral[]);
         });
       } else {
         print("Error fetching users: ${res.statusCode}");

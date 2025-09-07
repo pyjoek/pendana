@@ -74,15 +74,19 @@ class _ProfileState extends State<Profile> {
           child: Column(
             children: [
               // Avatar
+              // CircleAvatar(
+              //   radius: 80,
+              //   backgroundImage: profileImage != null
+              //       ? FileImage(profileImage! as File)
+              //       : AssetImage(
+              //           gender == "male"
+              //               ? "assets/male.jpg"
+              //               : "assets/female.png",
+              //         ) as ImageProvider,
+              // ),
               CircleAvatar(
                 radius: 80,
-                backgroundImage: profileImage != null
-                    ? FileImage(profileImage! as File)
-                    : AssetImage(
-                        gender == "male"
-                            ? "assets/male.jpg"
-                            : "assets/female.png",
-                      ) as ImageProvider,
+                backgroundImage: NetworkImage('http://127.0.0.1:8000/storage/$profileImage'),
               ),
 
               const SizedBox(height: 20),
