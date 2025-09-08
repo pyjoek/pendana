@@ -192,29 +192,29 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: height * 0.06),
 
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ForgotPassword(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          child: Center(
-                            child: Text(
-                              "Forgot Password?!",
-                              style: TextStyle(
-                                  color: Colors.pink,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => ForgotPassword(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: Container(
+                      //     width: double.infinity,
+                      //     padding: EdgeInsets.symmetric(vertical: 15),
+                      //     child: Center(
+                      //       child: Text(
+                      //         "Forgot Password?!",
+                      //         style: TextStyle(
+                      //             color: Colors.pink,
+                      //             fontSize: 15,
+                      //             fontWeight: FontWeight.w400),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       InkWell(
                         onTap: _loading ? null : loginUser,
                         child: Container(

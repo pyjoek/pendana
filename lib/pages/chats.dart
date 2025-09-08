@@ -68,6 +68,8 @@ void dispose() {
           final otherUserId = chat["other_user_id"].toString();
           final userName = chat["other_user_name"].toString();
           final lastMsg = chat["messages"][0]["message"];
+          final isRead = chat["messages"][0]["is_read"] ?? true;
+
 
           return ListTile(
             leading: CircleAvatar(
@@ -76,8 +78,19 @@ void dispose() {
                 userName[0].toUpperCase()
                 ),
               ),
-            title: Text(userName),
-            subtitle: Text(lastMsg),
+            title: Text(
+              userName,
+              style: TextStyle(
+                fontWeight: isRead ? FontWeight.normal : FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(
+              lastMsg,
+              style: TextStyle(
+                fontWeight: isRead ? FontWeight.normal : FontWeight.bold,
+                color: Colors.grey[700],
+              ),
+            ),
             onTap: () {
               Navigator.push(
                 context,
