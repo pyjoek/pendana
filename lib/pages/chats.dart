@@ -89,7 +89,7 @@ void dispose() {
                   ),
                 ),
               ).then((_) {
-                fetchChats(); // 🔹 Refresh when coming back
+                fetchChats();
               });
             },
           );
