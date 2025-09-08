@@ -22,7 +22,6 @@ class _EncounterState extends State<Encounter> {
   void initState() {
     super.initState();
     fetchUsers();
-    print(usergeneral);
   }
 
   Future<void> fetchUsers() async {

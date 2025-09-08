@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pendana/pages/chatpage.dart';
 
 class LikedMePage extends StatefulWidget {
-  final int userId; // current logged-in user id
 
-  const LikedMePage({super.key, required this.userId});
+  const LikedMePage({super.key});
+  
+  get Id => null;
 
   @override
   State<LikedMePage> createState() => _LikedMePageState();
@@ -18,6 +19,7 @@ class _LikedMePageState extends State<LikedMePage> {
   bool isLoading = true;
   // final url = "http://10.0.2.2:8000/api";
   final url = "http://127.0.0.1:8000/api";
+  int? Id;
 
   @override
   void initState() {
@@ -26,9 +28,12 @@ class _LikedMePageState extends State<LikedMePage> {
   }
 
   Future<void> fetchUsersLikedMe() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Id = await prefs.getInt("userId");
+
     try {
       final res = await http.get(
-        Uri.parse("${url}/encounters/liked-me/${widget.userId}"),
+        Uri.parse("${url}/encounters/liked-me/${Id}"),
       );
 
       if (res.statusCode == 200) {
@@ -36,6 +41,7 @@ class _LikedMePageState extends State<LikedMePage> {
         setState(() {
           usersLikedMe = data;
           isLoading = false;
+          
         });
       } else {
         print("Failed to fetch users who liked me: ${res.statusCode}");
@@ -85,7 +91,7 @@ class _LikedMePageState extends State<LikedMePage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ChatPage(
-                              userId: widget.userId,
+                              userId: widget.Id,
                               receiverId: user['id'],
                               otherUserName: user['name'],
                               ),

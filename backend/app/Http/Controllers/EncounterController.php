@@ -50,6 +50,7 @@ class EncounterController extends Controller
     // List of people I liked
     public function likes($userId)
     {
+        $userId = (int) $userId;
         $likes = Encounter::with('target')
             ->where('user_id', $userId)
             ->where('action', 'like')
@@ -71,6 +72,8 @@ class EncounterController extends Controller
                     'name' => $encounter->user->name,
                 ];
             });
+
+        $usergeneral = UserGeneral::where('id', $userId)->first();
 
         return response()->json($users);
     }
