@@ -75,7 +75,7 @@ class EncounterController extends Controller
 
         $usergeneral = UserGeneral::where('id', $userId)->first();
 
-        return response()->json($users);
+        return response()->json([$users, $usergeneral], 200);
     }
 
 }

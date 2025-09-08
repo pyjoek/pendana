@@ -38,8 +38,7 @@ void dispose() {
 
 
   Future<void> fetchMessages() async {
-    final res = await http.get(Uri.parse(
-        "${url}/messages/${widget.userId}/${widget.receiverId}"));
+    final res = await http.get(Uri.parse("${url}/messages/${widget.userId}/${widget.receiverId}"));
     if (res.statusCode == 200) {
       setState(() {
         messages = jsonDecode(res.body);

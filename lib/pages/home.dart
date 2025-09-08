@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
     super.initState();
     _pages = [
       Encounter(currentUserId: widget.userId,), // 👀 Encounters
-      LikedMePage(),      // ❤️ Likes
+      LikedMePage(userId: widget.userId,),      // ❤️ Likes
       ChatListPage(userId: widget.userId),                             // 💬 Chats
       Profile(userId: widget.userId),                              // ⚙️ Settings/Profile
     ];
