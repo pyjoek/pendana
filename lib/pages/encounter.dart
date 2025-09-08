@@ -43,6 +43,22 @@ class _EncounterState extends State<Encounter> {
     }
   }
 
+  int calculateAge(String dobString) {
+    DateTime dob = DateTime.parse(dobString); // e.g. "2000-05-10"
+    DateTime today = DateTime.now();
+
+    int age = today.year - dob.year;
+
+    // If birthday hasn’t occurred yet this year, subtract 1
+    if (today.month < dob.month || 
+      (today.month == dob.month && today.day < dob.day)) {
+      age--;
+    }
+
+    return age;
+  }
+
+
   Future<void> sendAction(int targetId, String action) async {
     final actionUrl = Uri.parse("${url}/encounters/action");
 
@@ -168,7 +184,7 @@ class _EncounterState extends State<Encounter> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          "${usergen['dob'] ?? "N/A"} years old",
+                          "${calculateAge(usergen['dob'])} yrs • ${user['gender'] ?? ''}",
                           style: const TextStyle(fontSize: 18),
                         ),
                         const SizedBox(height: 8),
