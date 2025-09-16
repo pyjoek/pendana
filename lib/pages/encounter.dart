@@ -156,7 +156,7 @@ class _EncounterState extends State<Encounter> {
                       // ? NetworkImage('http://127.0.0.1:8000/storage/${usergen["profile_picture"]}')
                         ? Image.network(
                             // usergen["profile_picture"],
-                            'http://127.0.0.1:8000/storage/${usergen["profile_picture"]}',
+                            'http://127.0.0.1:8000/${usergen["profile_picture"]}',
                             fit: BoxFit.cover,
                             width: double.infinity,
                           )
