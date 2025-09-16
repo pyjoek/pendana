@@ -76,36 +76,50 @@ class _LikedMePageState extends State<LikedMePage> {
           ? const Center(child: CircularProgressIndicator())
           : usersLikedMe.isEmpty
               ? const Center(child: Text("Nobody has liked you yet."))
-              : ListView.builder(
+              : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // 🔹 two items per row
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.8, // adjust height/width ratio
+                  ),
                   itemCount: usersLikedMe.length,
                   itemBuilder: (context, index) {
                     final user = usersLikedMe[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          radius: 28,
-                          backgroundImage: NetworkImage("http://127.0.0.1:8000/storage/${usergeneral['profile_picture']}"),
+                    return GestureDetector(
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10,),
+                            CircleAvatar(
+                            radius: 78,
+                            backgroundImage: NetworkImage("http://127.0.0.1:8000/storage/${usergeneral['profile_picture']}"),
+                          ),
+                            SizedBox(height: 5,),
+                          Text(user['name'] ?? "Unknown"),
+                            SizedBox(height: 5,),
+                          Text(
+                            "${calculateAge(usergeneral['dob'])} yrs • ${user['gender'] ?? ''}",
+                          ),
+                            SizedBox(height: 5,),
+                          const Icon(Icons.favorite, color: Colors.pink),
+                          ],
                         ),
-                        title: Text(user['name'] ?? "Unknown"),
-                        subtitle: Text(
-                          "${calculateAge(usergeneral['dob'])} yrs • ${user['gender'] ?? ''}",
-                        ),
-                        trailing: const Icon(Icons.favorite, color: Colors.pink),
-                        onTap: () {
-                            // Later: open profile or start chat
-                            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChatPage(
-                              userId: widget.userId,
-                              receiverId: user['id'],
-                              otherUserName: user['name'],
-                              ),
-                            ),
-                            );
-                        },
                       ),
+                          onTap: () {
+                              // Later: open profile or start chat
+                              Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                userId: widget.userId,
+                                receiverId: user['id'],
+                                otherUserName: user['name'],
+                                ),
+                              ),
+                              );
+                          },
                     );
                   },
                 ),
