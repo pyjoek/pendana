@@ -3,7 +3,6 @@ import 'package:pendana/auth/login.dart';
 import 'package:pendana/auth/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
-
 void main() async {
 
   if (Platform.isAndroid || Platform.isIOS) {
