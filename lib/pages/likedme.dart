@@ -13,10 +13,9 @@ class LikedMePage extends StatefulWidget {
 
 class _LikedMePageState extends State<LikedMePage> {
   List<dynamic> usersLikedMe = [];
-  Map<String, dynamic> usergeneral = {};
   bool isLoading = true;
-  // final url = "http://10.0.2.2:8000/api";
   final url = "http://127.0.0.1:8000/api";
+  // final url = "http://10.0.2.2:8000/api"; // for Android emulator
 
   @override
   void initState() {
@@ -30,31 +29,27 @@ class _LikedMePageState extends State<LikedMePage> {
 
     int age = today.year - dob.year;
 
-    // If birthday hasn’t occurred yet this year, subtract 1
-    if (today.month < dob.month || 
-      (today.month == dob.month && today.day < dob.day)) {
+    if (today.month < dob.month ||
+        (today.month == dob.month && today.day < dob.day)) {
       age--;
     }
 
     return age;
   }
 
-
   Future<void> fetchUsersLikedMe() async {
     try {
       final res = await http.get(
-        Uri.parse("${url}/encounters/liked-me/${widget.userId}"),
+        Uri.parse("$url/encounters/liked-me/${widget.userId}"),
       );
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
+
         setState(() {
-          usersLikedMe = data[0];
-          usergeneral = data[1];
+          usersLikedMe = data; // store list of users with their usergeneral
           isLoading = false;
         });
-
-        print(usergeneral['dob']);
       } else {
         print("Failed to fetch users who liked me: ${res.statusCode}");
         setState(() => isLoading = false);
@@ -77,49 +72,64 @@ class _LikedMePageState extends State<LikedMePage> {
           : usersLikedMe.isEmpty
               ? const Center(child: Text("Nobody has liked you yet."))
               : GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // 🔹 two items per row
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // two items per row
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 0.8, // adjust height/width ratio
+                    childAspectRatio: 0.8,
                   ),
                   itemCount: usersLikedMe.length,
                   itemBuilder: (context, index) {
                     final user = usersLikedMe[index];
+                    final usergeneral = user['usergeneral'];
+
                     return GestureDetector(
                       child: Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 3,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(height: 10,),
                             CircleAvatar(
-                            radius: 78,
-                            backgroundImage: NetworkImage("http://127.0.0.1:8000/storage/${usergeneral['profile_picture']}"),
-                          ),
-                            SizedBox(height: 5,),
-                          Text(user['name'] ?? "Unknown"),
-                            SizedBox(height: 5,),
-                          Text(
-                            "${calculateAge(usergeneral['dob'])} yrs • ${user['gender'] ?? ''}",
-                          ),
-                            SizedBox(height: 5,),
-                          const Icon(Icons.favorite, color: Colors.pink),
+                              radius: 48,
+                              backgroundImage: usergeneral['profile_picture'] != null
+                                  ? NetworkImage(
+                                      "http://127.0.0.1:8000/storage/${usergeneral['profile_picture']}",
+                                    )
+                                  : const AssetImage("assets/images/placeholder.png")
+                                      as ImageProvider,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              user['name'] ?? "Unknown",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "${calculateAge(usergeneral['dob'])} yrs • ${usergeneral['gender'] ?? ''}",
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            const SizedBox(height: 6),
+                            const Icon(Icons.favorite, color: Colors.pink),
                           ],
                         ),
                       ),
-                          onTap: () {
-                              // Later: open profile or start chat
-                              Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatPage(
-                                userId: widget.userId,
-                                receiverId: user['id'],
-                                otherUserName: user['name'],
-                                ),
-                              ),
-                              );
-                          },
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatPage(
+                              userId: widget.userId,
+                              receiverId: user['id'],
+                              otherUserName: user['name'],
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
