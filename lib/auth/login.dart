@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pendana/auth/forgot.dart';
+// import 'package:pendana/auth/forgot.dart';
 import 'dart:convert';
 import 'package:pendana/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
