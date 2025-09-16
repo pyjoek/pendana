@@ -63,19 +63,36 @@ class EncounterController extends Controller
     public function likedMe($userId)
     {
         $users = Encounter::where('target_id', $userId)
-            ->where('action', 'like')
-            ->with('user') // eager load the liker user relationship
+        ->where('action', 'like')
+        ->with('user.userGeneral') // eager load user and their general info
             ->get()
-            ->map(function($encounter) {
+            ->map(function ($encounter) {
                 return [
                     'id' => $encounter->user->id,
                     'name' => $encounter->user->name,
+                    'usergeneral' => $encounter->user->userGeneral, // include usergeneral
                 ];
             });
-
-        $usergeneral = UserGeneral::where('id', $userId)->first();
-
-        return response()->json([$users, $usergeneral], 200);
-    }
+            
+            return response()->json($users, 200);
+        }
+        
+        // public function likedMee($userId)
+        // {
+        //     $users = Encounter::where('target_id', $userId)
+        //         ->where('action', 'like')
+        //         ->with('user') // eager load the liker user relationship
+        //         ->get()
+        //         ->map(function($encounter) {
+        //             return [
+        //                 'id' => $encounter->user->id,
+        //                 'name' => $encounter->user->name,
+        //             ];
+        //         });
+    
+        //     $usergeneral = UserGeneral::where('id', $userId)->first();
+    
+        //     return response()->json([$users, $usergeneral], 200);
+        // }
 
 }
