@@ -26,9 +26,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
+    
     Route::get('/user', [AuthController::class, 'profile']);
-    Route::post('/general', [GeneralController::class, 'store']);
-});
+    Route::post('/general', [GeneralController::class, 'store']);s
+
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/user_general', [UserGeneralController::class, 'store']);
 
@@ -51,3 +52,5 @@ Route::post('/encounters/action', [EncounterController::class, 'action']);
 Route::get('/likes/{userId}', [EncounterController::class, 'likes']); 
 // routes/api.php
 Route::get('/encounters/liked-me/{userId}', [EncounterController::class, 'likedMe']);
+
+});
